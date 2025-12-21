@@ -1,72 +1,130 @@
-%custom.cls
+% custom.cls — IOE Thapathali guidelines
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{custom}[2024/12/20 My Custom Format]
+\ProvidesClass{custom}[2025/12/21 IOE Thapathali Format]
 
-% Base it on an existing class
-\LoadClass[12 pt,a4 paper]{report}
+% Base class
+\LoadClass[12pt,a4paper]{report}
 
-% Load required packages
+% Packages
 \RequirePackage{geometry}
-\RequirePackage{title sec}
-\RequirePackage{x color}
+\RequirePackage{titlesec}
+\RequirePackage{setspace}
+\RequirePackage{xcolor}
+\RequirePackage{newtxtext}   % Times-like text
 
-% Custom margins
+\RequirePackage{fancyhdr}
+\RequirePackage{etoolbox}
+\RequirePackage{caption}
+\RequirePackage{tocloft}
+\RequirePackage{amsmath}     % Math support
+
+% Page layout
 \geometry{
-    top=1 in,
-    bottom=1 in,
-    left=1.5 in,
-    right=1 in
+  top=1in,
+  bottom=1in,
+  left=1.5in,
+  right=1in,
+  includefoot % allow precise footer placement
+}
+\setlength{\footskip}{0.5in} % page number 0.5" from bottom
+
+
+% Headers/footers: centered page number at footer, no header line
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Front matter and main matter helpers (Roman for prefatory, Arabic for body)
+\newcommand{\frontmatter}{%
+  \cleardoublepage
+  \pagenumbering{roman} % i, ii, iii...
+  \pagestyle{fancy}
+}
+\newcommand{\mainmatter}{%
+  \cleardoublepage
+  \pagenumbering{arabic} % 1, 2, 3...
+  \pagestyle{fancy}
 }
 
-% Custom title formatting
+% Cover page utility (no page number)
+\newenvironment{coverpage}{\thispagestyle{empty}}{\clearpage}
 
-\titleformat{\title}
-  {\fontsize{12}{18}\selectfont\bfseries\setstretch{1.5}}
-  {}{0 pt}{\MakeUppercase}
+% Center figures and tables by default
+\AtBeginEnvironment{figure}{\centering}
+\AtBeginEnvironment{table}{\centering}
 
-\titlespacing{\title}
-  {0 pt}     % Left indent
-  {0 pt}     % Space before
-  {0 pt}    % Space after
+% Caption font 11pt (you may change to 12pt if preferred)
+\DeclareCaptionFont{elevenpt}{\fontsize{11}{13}\selectfont}
+\captionsetup{font=elevenpt,labelfont=bf}
 
+% TOC/LOF/LOT: titles 12pt bold, single-spacing inside lists
+\renewcommand{\cfttoctitlefont}{\bfseries\fontsize{12}{18}\selectfont\MakeUppercase}
+\renewcommand{\cftloftitlefont}{\bfseries\fontsize{12}{18}\selectfont\MakeUppercase}
+\renewcommand{\cftlottitlefont}{\bfseries\fontsize{12}{18}\selectfont\MakeUppercase}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{12pt}
+\setlength{\cftbeforeloftitleskip}{0pt}
+\setlength{\cftafterloftitleskip}{12pt}
+\setlength{\cftbeforelottitleskip}{0pt}
+\setlength{\cftafterlottitleskip}{12pt}
+\let\OldTOC\tableofcontents
+\renewcommand{\tableofcontents}{\begingroup\singlespacing\OldTOC\endgroup}
+\let\OldLOF\listoffigures
+\renewcommand{\listoffigures}{\begingroup\singlespacing\OldLOF\endgroup}
+\let\OldLOT\listoftables
+\renewcommand{\listoftables}{\begingroup\singlespacing\OldLOT\endgroup}
 
-% Custom chapter formatting
-\usepackage{titlesec}
-\usepackage{setspace}
+% Headings (Left-justified)
+% HEADING 1: Chapter — 12pt, BOLD, UPPERCASE, before=0, after=12, LS=1.5
+\titleformat{\chapter}[block]
+  {\bfseries\fontsize{12}{18}\selectfont\setstretch{1.5}}
+  {\thechapter}{1em}{\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{-50pt}{12pt}
 
-\titleformat{\chapter}
-  {\fontsize{12}{18}\selectfont\bfseries\setstretch{1.5}}
-  {}{0 pt}{\MakeUppercase}
+% HEADING 2: Section — 12pt, BOLD, before=0, after=10, LS=1.5
+\titleformat{\section}[block]
+  {\bfseries\fontsize{12}{18}\selectfont\setstretch{1.5}}
+  {\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{0pt}{10pt}
 
-\titlespacing{\chapter}
-  {0 pt}     % Left indent
-  {0 pt}     % Space before
-  {12 pt}    % Space after
+% HEADING 3: Subsection — 12pt, BOLD, before=0, after=8, LS=1.5
+\titleformat{\subsection}[block]
+  {\bfseries\fontsize{12}{18}\selectfont\setstretch{1.5}}
+  {\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{0pt}{8pt}
 
-\titleformat{\section}
-  {\fontsize{12}{18}\selectfont\bfseries\setstretch{1.5}}
-  {\thesection}{1 em}{}
-  
-\titlespacing{\section}
-  {0 pt}     % Left indent
-  {0 pt}     % Space before: 0
-  {12 pt}    % Space after: 12pt
+% HEADING 4: Subsubsection — 12pt, BOLD, before=0, after=6, LS=1.5
+\titleformat{\subsubsection}[block]
+  {\bfseries\fontsize{12}{18}\selectfont\setstretch{1.5}}
+  {\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{-10pt}{6pt}
 
-\titleformat{\subsection}
-  {\fontsize{12}{18}\bfseries\setstretch{1.5}}
-  {\thesubsection}{1 em}{}
+% HEADING 5: Paragraph — 12pt, BOLD, before=0, after=6, LS=1.5
+\titleformat{\paragraph}[block]
+  {\fontsize{12}{18}\selectfont\setstretch{1.5}}
+  {\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{0pt}{18pt}
 
-\titlespacing{\subsection}
-  {0 pt}
-  {0 pt}
-  {10 pt}
+% Normal text environment with 18pt spacing after
+\newenvironment{normaltext}{%
+  \par
+  \fontsize{12}{18}\selectfont
+  \setstretch{1.5}%
+  \setlength{\parskip}{18pt}%     % No automatic spacing
+  \setlength{\parindent}{0pt}%   % No indent
+  \setlength{\parskip}{0pt plus 0pt}% Reset
+}{%
+  \par
+  \vspace{18pt}%                 % Add 18pt after environment ends
+}
 
-% NORMAL PARAGRAPH FORMATTING
-% Font size: 12pt (already set by \LoadClass[12pt])
-% Line spacing: 1.5
-\setstretch{1.5}
-
-% Spacing before: 0, after: 18pt
-\setlength{\parskip}{18pt}      % 18pt space after each paragraph
-\setlength{\parindent}{0pt}     % No indent (since we have space between paragraphs)
+% Notes:
+% - This class uses Times-like fonts via newtxtext/newtxmath (pdfLaTeX).
+% - For exact "Times New Roman", compile with XeLaTeX and replace font setup:
+%   \RequirePackage{fontspec}
+%   \setmainfont{Times New Roman}
+%   \setsansfont{Times New Roman}
+%   \setmonofont{Times New Roman}
