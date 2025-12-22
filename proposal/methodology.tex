@@ -1,0 +1,193 @@
+\section{Methodology}
+
+This project aims to fine-tune the OPT-350M large language model for Python code generation. 
+The methodology is structured in three phases: dataset preparation, fine-tuning, and evaluation. 
+Figure~\ref{fig:flowchart} shows the flowchart of the fine-tuning procedure.
+
+\begin{figure}[h]
+    \centering
+    % \includegraphics[width=0.85\linewidth]{flowchart.png} % Uncomment when you add the figure
+    \caption{Flowchart of the fine-tuning process}
+    \label{fig:flowchart}
+\end{figure}
+
+% ---------------------------------------------------------
+\subsection{Dataset Description and Preparation}
+
+\begin{sloppypar}
+Fine-tuning OPT-350M for Python code generation requires a high-quality, domain-specific dataset 
+containing diverse programming tasks and their corresponding solutions. 
+We will construct a composite dataset from multiple reputable open-source sources.
+\end{sloppypar}
+
+\subsubsection{Dataset Sources and Composition:}
+
+\paragraph{(1) FlyTech Python Code Dataset (2025)}~
+\begin{itemize}
+    \item \textbf{Size:} $\sim$42,000 instruction--code pairs
+    \item \textbf{Content:} Python scripts with comments, docstrings, and structured tasks
+    \item \textbf{Reason for Selection:}
+    \begin{itemize}
+        \item Curated specifically for code generation
+        \item High-quality, well-commented Python code
+        \item Diverse mix of algorithmic and real-world examples
+    \end{itemize}
+    \item \textbf{License:} MIT License (per Hugging Face repository)
+\end{itemize}
+
+\paragraph{(2) Python Code Instructions 18k (Alpaca-style)}~
+\begin{itemize}
+    \item \textbf{Size:} $\sim$18,000 instruction--response pairs
+    \item \textbf{Content:} Instruction prompts and Python code responses
+    \item \textbf{Reason for Selection:}
+    \begin{itemize}
+        \item Matches the instruction-tuning structure required by OPT
+        \item Provides human-readable prompts with explanations
+        \item Complements FlyTech by increasing prompt diversity
+    \end{itemize}
+    \item \textbf{License:} CC BY-NC 4.0 (non-commercial research use)
+\end{itemize}
+
+\paragraph{(3) LeetCode/HackerRank Programming Problems (Evaluation Only)}~
+\begin{itemize}
+    \item \textbf{Size:} $\sim$200--300 problems (not used for training)
+    \item \textbf{Content:} Problem descriptions + reference solutions written by us
+    \item \textbf{Reason for Selection:}
+    \begin{itemize}
+        \item Realistic competitive programming tasks
+        \item Enables functional correctness testing
+    \end{itemize}
+    \item \textbf{License:}
+    \begin{itemize}
+        \item Direct redistribution of LeetCode content is not allowed
+        \item Only prompts used for evaluation (fair use), with our own solutions
+    \end{itemize}
+\end{itemize}
+
+We will standardize the problem set used from LeetCode/HackerRank and not directly extract their internal datasets.
+
+% ---------------------------------------------------------
+\subsubsection{Dataset Cleaning}
+
+Collected datasets will go through the following processing steps:
+\begin{itemize}
+    \item Removal of duplicate examples
+    \item Filtering of incomplete or non-functional Python code
+    \item Normalization of formatting and consistent indentation
+\end{itemize}
+
+\paragraph{Final Dataset Size (Expected)}
+\begin{itemize}
+    \item FlyTech: $\sim$40,000
+    \item Alpaca: $\sim$17,000
+    \item \textbf{Total usable examples:} $\sim$57,000
+\end{itemize}
+
+\subsection{Train/Validation Split:}
+We will divide the cleaned dataset into:
+\begin{itemize}
+    \item 90\% training set
+    \item 5\% validation set
+    \item 5\% evaluation set
+\end{itemize}
+
+The evaluation set (LeetCode/HackerRank) remains entirely separate.
+
+% ---------------------------------------------------------
+\subsubsection{Instruction Formatting and Tokenization}
+
+Each training example will be converted into an instruction-style structure:
+
+\begin{quote}
+\begin{ttfamily}
+Instruction: Write a Python code for printing Hello World.\\
+Response: <Python code with docstrings or comments>
+\end{ttfamily}
+\end{quote}
+
+Tokenization will be performed using the official OPT tokenizer to ensure compatibility with the pretrained model.
+
+% ---------------------------------------------------------
+\subsection{Model Fine-Tuning}
+
+We will fine-tune the OPT-350M model using QLoRA to enable efficient code generation while minimizing computational cost. 
+The base model will be loaded in quantized form and kept frozen.
+
+\subsubsection{Fine-Tuning Approach}
+
+Fine-tuning follows an instruction-tuning paradigm: given a text prompt $x$, the model predicts the next token in the Python code sequence $y$.
+
+\begin{equation}
+\text{loss} = -\sum_{t=1}^{T} \log P_{\theta} (y_{t}^{\text{true}} \mid y_{<t}, x)
+\end{equation}
+
+Model parameters are updated using gradient descent:
+
+\begin{equation}
+\theta_{i+1} \leftarrow \theta_i - \alpha \frac{\partial (\text{loss})}{\partial \theta}
+\end{equation}
+
+% ---------------------------------------------------------
+\subsubsection{QLoRA for Efficient Training}
+
+QLoRA enables parameter-efficient fine-tuning by:
+\begin{itemize}
+    \item Keeping the pretrained model weights frozen
+    \item Loading weights in 4-bit quantization
+    \item Adding trainable low-rank adapter matrices inside transformer blocks
+\end{itemize}
+
+Only the adapter parameters are optimized, reducing VRAM usage and making training feasible on Google Colab.
+
+% ---------------------------------------------------------
+\subsubsection{Training Setup}
+
+\begin{itemize}
+    \item \textbf{Platform:} Google Colab
+    \item \textbf{Optimizer:} AdamW
+    \item \textbf{Hyperparameters:} learning rate, batch size, and epochs tuned using validation loss
+    \item \textbf{Regularization:} Dropout applied to adapter layers
+    \item \textbf{Early stopping:} Enabled based on validation loss
+    \item \textbf{Batching:} Token-based batching targeting $\sim$0.5M tokens per batch
+\end{itemize}
+
+If a single Colab session is insufficient for training the full dataset, the dataset will be divided into multiple segments and trained incrementally, with checkpoints saved between sessions.
+
+\subsubsection{Monitoring and Checkpointing}
+
+\begin{itemize}
+    \item Training monitored with Weights \& Biases (WandB)
+    \item Periodic checkpoints stored locally and on Google Drive
+    \item Final model uploaded to Hugging Face Hub
+\end{itemize}
+
+% ---------------------------------------------------------
+\subsection{Evaluation}
+
+The fine-tuned model will be compared against the base OPT-350M model using three evaluation strategies.
+
+\subsubsection{1. Functional Correctness (Primary Evaluation)}
+
+Generated solutions will be executed in a secure Docker-based sandbox. Each result is classified as:
+
+\begin{itemize}
+    \item \textbf{Right:} Correct output for all test cases
+    \item \textbf{Partial:} Runs but fails some test cases
+    \item \textbf{Wrong:} Crashes or produces incorrect output
+\end{itemize}
+
+This directly measures true problem-solving ability.
+
+\subsubsection{2. Automatic Similarity Metrics (BLEU, CodeBLEU)}
+
+\begin{itemize}
+    \item \textbf{BLEU:} Evaluates token-level similarity to reference solutions
+    \item \textbf{CodeBLEU:} Incorporates syntax, data-flow, and semantic structure; more suitable for code generation
+\end{itemize}
+
+These are used as supporting quantitative metrics alongside functional evaluation.
+
+\subsubsection{3. Combined Evaluation Insight}
+
+By combining functional execution with similarity-based metrics, we ensure that the generated Python code is not only syntactically valid but also meaningful and semantically aligned with correct solutions.
+
