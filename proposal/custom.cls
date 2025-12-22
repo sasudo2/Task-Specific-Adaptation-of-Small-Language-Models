@@ -82,7 +82,7 @@
 \titleformat{\chapter}[block]
   {\bfseries\fontsize{12}{18}\selectfont\setstretch{1.5}}
   {\thechapter}{1em}{\MakeUppercase}
-\titlespacing*{\chapter}{0pt}{-50pt}{12pt}
+\titlespacing*{\chapter}{0pt}{-20pt}{12pt}
 
 % HEADING 2: Section — 12pt, BOLD, before=0, after=10, LS=1.5
 \titleformat{\section}[block]
