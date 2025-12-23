@@ -12,17 +12,23 @@ Fine-tuning is the process of further training a pre-trained LLM on a smaller, t
 \vspace{18 pt}
 The OPT-350M (Open Pre-trained Transformer) model, developed by Meta AI, is a decoder-only LLM. With its 350 million parameters, it gives an important balance. It is large enough to possess meaningful generative capacity, yet small enough to be computationally efficient for research, development, and fine-tuning on consumer-grade or limited-resource hardware. This makes it an ideal candidate for demonstrating efficient specialization techniques.
 
-\vspace{18pt}
-
+\vspace{18 pt}
 \section{Motivaiton}
+This project addresses the critical need to bridge the gap between high-level AI capabilities and the practical resource constraints faced by developers.
+
+\vspace{18 pt}
 \section{Problem Definition}
+Modern Large Language Models (LLMs) have shown remarkable capabilities in automated code generation. However, high-performance models typically require billions of parameters, requiring massive power and high-end GPUs for fine-tuning. OPT-350M is accessible for research but lacks the specialized "instruction-following" logic required to generate clean, executable Python code out of the box.
+
+\vspace{18 pt}
 \section{Objectives}
 The primary objectives of this project are:
     \begin{itemize}
-    \item To fine-tune OPT-350M model on python code dataset to make it a better code generator.
+    \item  Fine-tune OPT-350M to achieve competitive Python code generation on a low end devices without gpus or minimal gpus.
     \item To use Parameter-Efficient Fine-Tuning (PEFT) through QLoRA to finetune OPT-350M model.
     \end{itemize}
 
+\vspace{18 pt}
 \section{Scope and Applications}
 The scope is strictly defined by the use of QLoRA to adapt the model on high-quality Python instruction sets. This enables the creation of privacy-centric, local coding assistants with higher accuracy and small size.
 \end{normaltext}
