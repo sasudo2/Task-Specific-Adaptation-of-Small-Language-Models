@@ -1,0 +1,18 @@
+\chapter{Feasibility Analysis}
+\begin{normaltext}
+    This project is primarily target at fine-tuning large language models for Python code generation using Parameter Efficient Fine Tuning (PEFT) with QLoRA. The feasibility of this project can be analyzed from several perspectives:
+
+    \vspace{18pt}
+    \section{Operational Feasibility:}
+    We expect this project to be applicable in relatively low end devices as the hardware requirement for Llama 2 7b is only 16GB VRAM which is available in consumer-grade GPUs like NVIDIA RTX 3060, 2060 and Google Colab free tier. The use of QLoRA significantly reduces the memory footprint making it feasible to execute on a single GPU. 
+
+    \vspace{18pt}
+    \section{Economic Feasibility:}
+    The project uses freely available models along with open-source datasets, and the hardware constraints are low enough to utilize consumer-grade GPUs or free cloud based services like Goodgle Colab.
+    We can use google colab pro if we face any problem during training in free tier which will cost us around \$10 per month.
+
+    \vspace{18pt}
+    \section{Technical Feasibility:}
+    This project will be implemented using well-established libraries such as Hugging Face Transformers and PEFT, which provide robust support for model loading, quantization, and fine-tuning. The team has prior experience with Python programming and machine learning frameworks, ensuring the technical skills required for successful implementation.
+
+\end{normaltext}

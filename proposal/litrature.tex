@@ -1,7 +1,5 @@
 \chapter{Litrature Review}
 \begin{normaltext}
-Deploying large language models on resource-constrained devices requires techniques that dramatically reduce computational and memory requirements while maintaining performance. This review examines recent advances in parameter-efficient fine-tuning (PEFT) that enable model adaptation for low-specification environments.
-
 \vspace{18pt}
 \section{Low Rank Adaptation (LoRA)}
 Hu et al.\cite{Hu2021} introduced LoRA, which freezes pre-trained model weights and injects trainable rank decomposition matrices into each Transformer layer. This approach reduces trainable parameters by 10,000 times and GPU memory requirements by three-fold compared to full fine-tuning of GPT-3 175B, enabling efficient adaptation on modest hardware without significant performance degradation.
