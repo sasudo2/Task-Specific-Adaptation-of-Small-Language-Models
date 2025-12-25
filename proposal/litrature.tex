@@ -11,8 +11,8 @@ Hu et al.\cite{Hu2021} introduced LoRA, which freezes pre-trained model weights 
 Dettmers et al.\cite{Dettmers2023} extended LoRA by combining quantization with low-rank adaptation. QLoRA introduces 4-bit NormalFloat (NF4), Double Quantization, and Paged Optimizers to achieve further memory reduction. The approach achieved 99.3\% of ChatGPT's performance with only 24 hours of single-GPU training, demonstrating that small, high-quality datasets are sufficient for state-of-the-art results when paired with efficient fine-tuning techniques.
 
 \vspace{18pt}
-\section{Open Pre-trained Transformer (OPT)}
-Zhang et al. \cite{Zhang2022} released Open Pre-trained Transformers (OPT), a suite of decoder-only pre-trained models ranging from 125M to 175B parameters with full model weights made publicly available. OPT-175B achieves comparable performance to GPT-3 while requiring only one-seventh of the carbon footprint to develop. The availability of these open models with complete access to weights addresses the reproducibility challenges in large language model research and provides accessible base models for adaptation techniques.
+\section{Open LLMs}
+Many Large language models have been released for public use and for research purpose. Zhang et al. \cite{Zhang2022} released Open Pre-trained Transformers (OPT), a suite of decoder-only pre-trained models ranging from 125M to 175B parameters with full model weights made publicly available.The OPT models does not work well with declarative instructions or point-blank interrogatives \cite{Zhang2022}. Touvron et al. \cite{Touvron2023Llama2} introduced Llama 2, a family of pre-trained and fine-tuned LLMs ranging from 7B to 70B parameters. Llama 2 models outperform open-source models of similar size and are competitive with proprietary models like GPT-3.5 and PaLM 2 on various benchmarks. With it's larger training dataset and superior architecture, Llama 2 demonstrates strong capabilities in code generation tasks compared to earlier models like OPT.
 
 \vspace{18pt}
 \section{Domain-Specific Application}

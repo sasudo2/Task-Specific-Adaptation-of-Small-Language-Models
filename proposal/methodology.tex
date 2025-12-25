@@ -1,5 +1,5 @@
-\section{Methodology}
-
+\chapter{Methodology}
+\begin{normaltext}
 This project aims to fine-tune the Llama 2 7B large language model for Python code generation. 
 The methodology is structured in three phases: dataset preparation, fine-tuning, and evaluation. 
 Figure~\ref{fig:flowchart} shows the flowchart of the fine-tuning procedure.
@@ -12,25 +12,26 @@ Figure~\ref{fig:flowchart} shows the flowchart of the fine-tuning procedure.
 \end{figure}
 
 % ---------------------------------------------------------
-\subsection{Dataset Description and Preparation}
+\section{Dataset Description and Preparation}
 
 Fine-tuning Llama 2 7B for Python code generation requires a high-quality, domain-specific dataset 
 containing diverse programming tasks and their corresponding solutions. 
 We will construct a composite dataset from multiple reputable open-source sources.
-
-\subsubsection{Dataset Sources and Composition:}
-
-\paragraph{(1) FlyTech Python Code Dataset (2025)}~
+\end{normaltext}
+\subsection{Dataset Sources and Composition:}
+\begin{normaltext}
+\begin{enumerate}
+\item{ FlyTech Python Code Dataset (2025)}~
 \begin{itemize}
-    \item \textbf{Size:} $\sim$42,000 instruction--code pairs
-    \item \textbf{Content:} Python scripts with comments, docstrings, and structured tasks
-    \item \textbf{Reason for Selection:}
+    \item {Size:} $\sim$42,000 instruction--code pairs
+    \item {Content:} Python scripts with comments, docstrings, and structured tasks
+    \item {Reason for Selection:}
     \begin{itemize}
         \item Curated specifically for code generation
         \item High-quality, well-commented Python code
         \item Diverse mix of algorithmic and real-world examples
     \end{itemize}
-    \item \textbf{License:} MIT License (per Hugging Face repository)
+    \item {License:} MIT License (per Hugging Face repository)
 \end{itemize}
 
     \item Python Code Instructions 18k (Alpaca-style)
@@ -63,9 +64,8 @@ We will construct a composite dataset from multiple reputable open-source source
         \end{itemize}
 
     
-     \end{normaltext}
+    
 \end{enumerate}
-\begin{normaltext}
   We will standardize the problem set used from LeetCode/HackerRank and not directly extract their internal datasets.  
 \end{normaltext}
 
@@ -93,7 +93,7 @@ We will construct a composite dataset from multiple reputable open-source source
 \end{normaltext}
 
 
-\subsection{Train/Validation Split:}
+\section{Train/Validation Split:}
 \begin{normaltext}
 We will divide the cleaned dataset into:
 \begin{itemize}
@@ -106,7 +106,7 @@ The evaluation set (LeetCode/HackerRank) remains entirely separate.
 \end{normaltext}
 
 
-\subsection{Instruction Formatting and Tokenization}
+\section{Instruction Formatting and Tokenization}
 \begin{normaltext}
     Each training example will be converted into an instruction-style structure:
 
@@ -117,7 +117,7 @@ The evaluation set (LeetCode/HackerRank) remains entirely separate.
     Chain-of-Thought: Check if a number equals the sum of its digits each raised to the power of the number of digits.
 
     Response:
-    ```python
+    \begin{verbatim}
     num = int(input("Enter a number: "))
     digits = len(str(num))
     armstrong_sum = sum(int(d)**digits for d in str(num))
@@ -125,6 +125,7 @@ The evaluation set (LeetCode/HackerRank) remains entirely separate.
         print(f"{num} is an Armstrong number")
     else:
         print(f"{num} is not an Armstrong number")
+    \end{verbatim}
     \end{ttfamily}
     \end{quote}
 
@@ -140,7 +141,7 @@ We will fine-tune the Llama 2 model using QLoRA to enable efficient Python code 
 The base model will be loaded with pretrained and 4-bit quantized weights to reduce memory usage.
 \end{normaltext}
 
-\subsection{Fine-Tuning Approach}
+\section{Fine-Tuning Approach}
 \begin{normaltext}
 Fine-tuning follows the instruction-tuning paradigm: given a prompt x, the model predicts the next token in the target Python code sequence y.
 To improve reasoning quality and reduce hallucination, we additionally include Chain-of-Thought (CoT) annotations inside the training samples.Each training example consists of:
@@ -168,7 +169,7 @@ how to reason before generating code
 This approach is known to significantly reduce hallucinations and improve generalization in small models.
 
 % ---------------------------------------------------------
-\subsection{QLoRA for Efficient Training}
+\section{QLoRA for Efficient Training}
 
 QLoRA enables parameter-efficient fine-tuning by:
 \begin{itemize}
@@ -176,6 +177,20 @@ QLoRA enables parameter-efficient fine-tuning by:
     \item Loading weights in 4-bit quantization
     \item Adding trainable low-rank adapter matrices inside transformer blocks
 \end{itemize}
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=0.85\linewidth]{without_qlora.png} % Uncomment when you add the figure
+%     \caption{Base Model Finetuning with out QLoRA Adapter Layers}
+%     \label{fig:Base Model Finetuning with out QLoRA Adapter Layer}
+% \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\linewidth]{with_qlora.png} 
+    % Uncomment when you add the figure
+    \caption{Base Model Finetuning with QLoRA Adapter Layers}
+    \label{fig:Base Model Finetuning with QLoRA Adapter Layersg}
+\end{figure}
 
 Only the adapter matrices are optimized.This allows us to incorporate CoT-augmented samples without increasing memory usage, making training feasible in Google Colab.
 CoT pairs tend to be longer, but QLoRA’s memory-efficient structure allows handling large token sequences even on limited hardware.
@@ -196,7 +211,7 @@ CoT pairs tend to be longer, but QLoRA’s memory-efficient structure allows han
 
 
 \vspace{18 pt}
-\subsubsection{Monitoring and Checkpointing}
+\subsection{Monitoring and Checkpointing}
 
 \begin{itemize}
     \item Training monitored with Weights \& Biases (WandB)
