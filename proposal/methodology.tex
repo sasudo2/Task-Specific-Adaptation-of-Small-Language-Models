@@ -93,7 +93,7 @@ We will construct a composite dataset from multiple reputable open-source source
 \end{normaltext}
 
 
-\section{Train/Validation Split:}
+\subsection{Train/Validation Split:}
 \begin{normaltext}
 We will divide the cleaned dataset into:
 \begin{itemize}
@@ -106,7 +106,7 @@ The evaluation set (LeetCode/HackerRank) remains entirely separate.
 \end{normaltext}
 
 
-\section{Instruction Formatting and Tokenization}
+\subsection{Instruction Formatting and Tokenization}
 \begin{normaltext}
     Each training example will be converted into an instruction-style structure:
 
@@ -141,7 +141,7 @@ We will fine-tune the Llama 2 model using QLoRA to enable efficient Python code 
 The base model will be loaded with pretrained and 4-bit quantized weights to reduce memory usage.
 \end{normaltext}
 
-\section{Fine-Tuning Approach}
+\subsection{Fine-Tuning Approach}
 \begin{normaltext}
 Fine-tuning follows the instruction-tuning paradigm: given a prompt x, the model predicts the next token in the target Python code sequence y.
 To improve reasoning quality and reduce hallucination, we additionally include Chain-of-Thought (CoT) annotations inside the training samples.Each training example consists of:
@@ -169,7 +169,7 @@ how to reason before generating code
 This approach is known to significantly reduce hallucinations and improve generalization in small models.
 
 % ---------------------------------------------------------
-\section{QLoRA for Efficient Training}
+\subsection{QLoRA for Efficient Training}
 
 QLoRA enables parameter-efficient fine-tuning by:
 \begin{itemize}
@@ -211,7 +211,7 @@ CoT pairs tend to be longer, but QLoRA’s memory-efficient structure allows han
 
 
 \vspace{18 pt}
-\subsection{Monitoring and Checkpointing}
+\section{Monitoring and Checkpointing} %########write mor here########
 
 \begin{itemize}
     \item Training monitored with Weights \& Biases (WandB)
