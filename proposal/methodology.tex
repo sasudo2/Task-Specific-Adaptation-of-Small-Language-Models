@@ -1,39 +1,37 @@
-\chapter{Methodology}
-\begin{normaltext}
-This project aims to fine-tune the OPT-350M large language model for Python code generation. The methodology is structured in three phases: dataset preparation, fine-tuning, and evaluation. 
-Figure~\ref{fig:methodology_flowchart} shows the flowchart of the fine-tuning procedure.
-\end{normaltext}
+\section{Methodology}
 
+This project aims to fine-tune the Llama 2 7B large language model for Python code generation. 
+The methodology is structured in three phases: dataset preparation, fine-tuning, and evaluation. 
+Figure~\ref{fig:flowchart} shows the flowchart of the fine-tuning procedure.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.85\textwidth]{finetuning_flowchart.png} %Uncomment when you add the figure
+    % \includegraphics[width=0.85\linewidth]{flowchart.png} % Uncomment when you add the figure
     \caption{Flowchart of the fine-tuning process}
-    \label{fig:methodology_flowchart}
+    \label{fig:flowchart}
 \end{figure}
 
 % ---------------------------------------------------------
-\section{Dataset Description and Preparation}
+\subsection{Dataset Description and Preparation}
 
-\begin{normaltext}
-Fine-tuning OPT-350M for Python code generation requires a high-quality, domain-specific dataset containing diverse programming tasks and their corresponding solutions. We will construct a composite dataset from multiple reputable open-source sources.
-\end{normaltext}
+Fine-tuning Llama 2 7B for Python code generation requires a high-quality, domain-specific dataset 
+containing diverse programming tasks and their corresponding solutions. 
+We will construct a composite dataset from multiple reputable open-source sources.
 
-\subsection{Dataset Sources and Composition:}
-\begin{enumerate}
-    \begin{normaltext}
-    \item FlyTech Python Code Dataset (2025)
-        \begin{itemize}
-            \item {Size:} $\sim$42,000 instruction--code pairs
-            \item {Content:} Python scripts with comments, docstrings, and structured tasks
-            \item {Reason for Selection:}
-            \begin{itemize}
-                \item Curated specifically for code generation
-                \item High-quality, well-commented Python code
-                \item Diverse mix of algorithmic and real-world examples
-            \end{itemize}
-            \item {License:} MIT License (per Hugging Facere pository)
-        \end{itemize}
+\subsubsection{Dataset Sources and Composition:}
+
+\paragraph{(1) FlyTech Python Code Dataset (2025)}~
+\begin{itemize}
+    \item \textbf{Size:} $\sim$42,000 instruction--code pairs
+    \item \textbf{Content:} Python scripts with comments, docstrings, and structured tasks
+    \item \textbf{Reason for Selection:}
+    \begin{itemize}
+        \item Curated specifically for code generation
+        \item High-quality, well-commented Python code
+        \item Diverse mix of algorithmic and real-world examples
+    \end{itemize}
+    \item \textbf{License:} MIT License (per Hugging Face repository)
+\end{itemize}
 
     \item Python Code Instructions 18k (Alpaca-style)
         \begin{itemize}
@@ -63,6 +61,8 @@ Fine-tuning OPT-350M for Python code generation requires a high-quality, domain-
                     \item Only prompts used for evaluation (fair use), with our own solutions
                 \end{itemize}
         \end{itemize}
+
+    
      \end{normaltext}
 \end{enumerate}
 \begin{normaltext}
@@ -70,13 +70,19 @@ Fine-tuning OPT-350M for Python code generation requires a high-quality, domain-
 \end{normaltext}
 
 
-\subsection{Dataset Cleaning:}
+\subsection{Dataset Processing Pipeline:}
 \begin{normaltext}
-    Collected datasets will go through the following processing steps:
+    The collected dataset will undergo several preprocessing steps to ensure quality and consistency before training:
     \begin{itemize}
-        \item Removal of duplicate examples
-        \item Filtering of incomplete or non-functional Python code
-        \item Normalization of formatting and consistent indentation
+        \item Duplicate removal
+        All repeated or identical instruction–code pairs will be removed to eliminate redundancy and reduce overfitting.
+
+        \item Filtering Incomplete Python Code:
+        Examples containing syntactically incorrect or incomplete Python code will be discarded using rule-based checks and code-parsing techniques.
+        \item Adding Chain-of-Thought (CoT) Explanations:
+        Each example will be enriched with a brief chain-of-thought explanation describing the reasoning steps used to solve the instruction.This helps the model learn structured reasoning patterns.
+        \item Normalization and Formatting:
+        All samples will be standardized with consistent indentation, spacing, variable naming, and overall formatting.
     \end{itemize}
     {Final Dataset Size (Expected)}
     \begin{itemize}
@@ -106,24 +112,44 @@ The evaluation set (LeetCode/HackerRank) remains entirely separate.
 
     \begin{quote}
     \begin{ttfamily}
-    Instruction: Write a Python code for printing Hello World.\\
-    Response: <Python code with docstrings or comments>
+    Instruction: Write a Python code for printing whether a given number is Armstrong.
+
+    Chain-of-Thought: Check if a number equals the sum of its digits each raised to the power of the number of digits.
+
+    Response:
+    ```python
+    num = int(input("Enter a number: "))
+    digits = len(str(num))
+    armstrong_sum = sum(int(d)**digits for d in str(num))
+    if num == armstrong_sum:
+        print(f"{num} is an Armstrong number")
+    else:
+        print(f"{num} is not an Armstrong number")
     \end{ttfamily}
     \end{quote}
 
-    Tokenization will be performed using the official OPT tokenizer to ensure compatibility with the pretrained model.
+    Finally, all training examples will be tokenized using the Llama tokenizer to ensure full compatibility with the pretrained Llama 2 model.
+     This guarantees that special tokens, vocabulary indices, and formatting structures align correctly during QLoRA fine-tuning, preventing token-mismatch issues and maintaining optimal model performance.
+
 \end{normaltext}
 
 % ---------------------------------------------------------
 \section{Model Fine-Tuning}
 \begin{normaltext}
-We will fine-tune the OPT-350M model \cite{Zhang2022} using QLoRA to enable efficient code generation while minimizing computational cost. 
-The base model will be loaded in quantized form and kept frozen.
+We will fine-tune the Llama 2 model using QLoRA to enable efficient Python code generation from textual prompts. 
+The base model will be loaded with pretrained and 4-bit quantized weights to reduce memory usage.
 \end{normaltext}
 
 \subsection{Fine-Tuning Approach}
 \begin{normaltext}
-Fine-tuning follows an instruction-tuning paradigm: given a text prompt $x$, the model predicts the next token in the Python code sequence $y$.
+Fine-tuning follows the instruction-tuning paradigm: given a prompt x, the model predicts the next token in the target Python code sequence y.
+To improve reasoning quality and reduce hallucination, we additionally include Chain-of-Thought (CoT) annotations inside the training samples.Each training example consists of:
+Instruction
+Human-written reasoning (CoT)
+Final code output
+This encourages the model to learn step-by-step reasoning patterns before producing the final answer.
+Mathematically, the model maximizes the likelihood of the entire sequence consisting of instruction, reasoning, and output:
+
 
 \begin{equation}
 \text{loss} = -\sum_{t=1}^{T} \log P_{\theta} (y_{t}^{\text{true}} \mid y_{<t}, x)
@@ -135,6 +161,12 @@ Model parameters are updated using gradient descent:
 \theta_{i+1} \leftarrow \theta_i - \alpha \frac{\partial (\text{loss})}{\partial \theta}
 \end{equation}
 
+CoT Integration
+The CoT component explicitly teaches the model:
+how to plan the solution
+how to reason before generating code
+This approach is known to significantly reduce hallucinations and improve generalization in small models.
+
 % ---------------------------------------------------------
 \subsection{QLoRA for Efficient Training}
 
@@ -145,7 +177,9 @@ QLoRA enables parameter-efficient fine-tuning by:
     \item Adding trainable low-rank adapter matrices inside transformer blocks
 \end{itemize}
 
-Only the adapter parameters are optimized, reducing VRAM usage and making training feasible on Google Colab.
+Only the adapter matrices are optimized.This allows us to incorporate CoT-augmented samples without increasing memory usage, making training feasible in Google Colab.
+CoT pairs tend to be longer, but QLoRA’s memory-efficient structure allows handling large token sequences even on limited hardware.
+
 \end{normaltext}
 % ---------------------------------------------------------
 \section{Training Setup}
@@ -156,10 +190,10 @@ Only the adapter parameters are optimized, reducing VRAM usage and making traini
         \item \textbf{Hyperparameters:} learning rate, batch size, and epochs tuned using validation loss
         \item \textbf{Regularization:} Dropout applied to adapter layers
         \item \textbf{Early stopping:} Enabled based on validation loss
-        \item \textbf{Batching:} Token-based batching targeting $\sim$0.5M tokens per batch
+        \item \textbf{Batching:} Token-based batching, using the maximum number of tokens that fit in GPU memory (typically 8k–32k tokens per batch on Colab)
+        \item \textbf{Multiple Session:} If needed, training will be split across multiple Colab sessions with checkpointing
     \end{itemize}
 
-If a single Colab session is insufficient for training the full dataset, the dataset will be divided into multiple segments and trained incrementally, with checkpoints saved between sessions.
 
 \vspace{18 pt}
 \subsubsection{Monitoring and Checkpointing}
@@ -175,7 +209,7 @@ If a single Colab session is insufficient for training the full dataset, the dat
 % ---------------------------------------------------------
 \section{Evaluation}
 \begin{normaltext}
-The fine-tuned model will be compared against the base OPT-350M model using three evaluation strategies.
+The fine-tuned model will be compared against the base Llama 2 7B model using two evaluation strategies.
 \begin{enumerate}
     \item{Functional Correctness (Primary Evaluation)}
 
