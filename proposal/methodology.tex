@@ -1,6 +1,6 @@
 \chapter{Methodology}
 \begin{normaltext}
-This project aims to fine-tune the Llama 2 7B large language model for Python code generation. 
+This project aims to fine-tune Llama 2 7B large language model for Python code generation. 
 The methodology is structured in three phases: dataset preparation, fine-tuning, and evaluation. 
 Figure~\ref{fig:flowchart} shows the flowchart of the fine-tuning procedure.
 
@@ -144,7 +144,7 @@ The base model will be loaded with pretrained and 4-bit quantized weights to red
 \subsection{Fine-Tuning Approach}
 \begin{normaltext}
 Fine-tuning follows the instruction-tuning paradigm: given a prompt x, the model predicts the next token in the target Python code sequence y.
-To improve reasoning quality and reduce hallucination, we additionally include Chain-of-Thought (CoT) annotations inside the training samples.Each training example consists of:
+To improve reasoning quality and reduce hallucination, we additionally include Chain-of-Thought (CoT) annotations inside the training samples. Each training example consists of:
 Instruction
 Human-written reasoning (CoT)
 Final code output

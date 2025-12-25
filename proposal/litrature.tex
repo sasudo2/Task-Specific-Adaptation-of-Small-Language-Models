@@ -7,8 +7,8 @@ Deploying large language models on resource-constrained devices requires techniq
 Hu et al.\cite{Hu2021} introduced LoRA, which freezes pre-trained model weights and injects trainable rank decomposition matrices into each Transformer layer. This approach reduces trainable parameters by 10,000 times and GPU memory requirements by three-fold compared to full fine-tuning of GPT-3 175B, enabling efficient adaptation on modest hardware without significant performance degradation.
 
 \vspace{18pt}
-\section{Quantized Low Rank Adaptation (QLoRA)}
-Dettmers et al.\cite{Dettmers2023} extended LoRA by combining quantization with low-rank adaptation. QLoRA introduces 4-bit NormalFloat (NF4), Double Quantization, and Paged Optimizers to achieve further memory reduction. The approach achieved 99.3\% of ChatGPT's performance with only 24 hours of single-GPU training, demonstrating that small, high-quality datasets are sufficient for state-of-the-art results when paired with efficient fine-tuning techniques.
+\section{Quantized Low-Rank Adaptation (QLoRA)}
+Dettmers et al.\cite{Dettmers2023} extended LoRA by combining quantization with low-rank adaptation. QLoRA introduces 4-bit NormalFloat (NF4), Double Quantization, and Paged Optimizers to achieve further memory reduction. This approach achieved 99.3\% of ChatGPT's performance with only 24 hours of single-GPU training, demonstrating that small, high-quality datasets are sufficient for state-of-the-art results when paired with efficient fine-tuning techniques.
 
 \vspace{18pt}
 \section{Open LLMs}
