@@ -1,20 +1,20 @@
 \chapter{Litrature Review}
 \begin{normaltext}
 \vspace{18pt}
-\section{Low Rank Adaptation (LoRA)}
-Hu et al.\cite{Hu2021} introduced LoRA, which freezes pre-trained model weights and injects trainable rank decomposition matrices into each Transformer layer. This approach reduces trainable parameters by 10,000 times and GPU memory requirements by three-fold compared to full fine-tuning of GPT-3 175B, enabling efficient adaptation on modest hardware without significant performance degradation.
+\textbf{Low Rank Adaptation (LoRA)}
+Hu et al.\cite{Hu2021} introduced LoRA, which freezes pre-trained model weights and injects trainable rank decomposition matrices into each Transformer layer. This approach reduces trainable parameters by 10,000 times and GPU memory requirements by 3 times compared to full fine-tuning of GPT-3 175B, enabling efficient adaptation on modest hardware without significant performance degradation.
 
 \vspace{18pt}
-\section{Quantized Low-Rank Adaptation (QLoRA)}
+\textbf{Quantized Low-Rank Adaptation (QLoRA)}
 Dettmers et al.\cite{Dettmers2023} extended LoRA by combining quantization with low-rank adaptation. QLoRA introduces 4-bit NormalFloat (NF4), Double Quantization, and Paged Optimizers to achieve further memory reduction. This approach achieved 99.3\% of ChatGPT's performance with only 24 hours of single-GPU training, demonstrating that small, high-quality datasets are sufficient for state-of-the-art results when paired with efficient fine-tuning techniques.
 
 \vspace{18pt}
-\section{Open LLMs}
+\textbf{Open LLMs}
 Many Large language models have been released for public use and for research purpose. Zhang et al. \cite{Zhang2022} released Open Pre-trained Transformers (OPT), a suite of decoder-only pre-trained models ranging from 125M to 175B parameters with full model weights made publicly available.The OPT models does not work well with declarative instructions or point-blank interrogatives \cite{Zhang2022}. Touvron et al. \cite{Touvron2023Llama2} introduced Llama 2, a family of pre-trained and fine-tuned LLMs ranging from 7B to 70B parameters. Llama 2 models outperform open-source models of similar size and are competitive with proprietary models like GPT-3.5 and PaLM 2 on various benchmarks. With it's larger training dataset and superior architecture, Llama 2 demonstrates strong capabilities in code generation tasks compared to earlier models like OPT.
 
 \vspace{18pt}
-\section{Domain-Specific Application}
-The practical effectiveness of PEFT techniques is demonstrated in fine-tuning CodeLlama-7B for Fortran code generation \cite{Govande2024}. Using LoRA to adapt only attention weights while freezing MLP modules, the researchers fine-tuned the model on high-quality Fortran code from public repositories and NASA codebases, with GPT-3.5-generated descriptions. The fine-tuned model significantly outperformed vanilla CodeLlama-7B-Instruct, achieving 41\% improvement in compilation rate, 150\% improvement in execution rate, and 75\% improvement in correct output rate on 540 LeetCode problems.
+\textbf{Domain-Specific Application}
+The practical effectiveness of Parameter Efficient Fine-Tuning (PEFT) techniques is demonstrated in fine-tuning CodeLlama-7B for Fortran code generation \cite{Govande2024}. Using LoRA to adapt only attention weights while freezing MLP modules, the researchers fine-tuned the model on high-quality Fortran code from public repositories and NASA codebases, with GPT-3.5 generated descriptions. The fine-tuned model significantly outperformed vanilla CodeLlama-7B-Instruct, achieving 41\% improvement in compilation rate, 150\% improvement in execution rate, and 75\% improvement in correct output rate on 540 LeetCode problems.
 
 
 

@@ -1,14 +1,14 @@
 \chapter{Methodology}
 \begin{normaltext}
 This project aims to fine-tune Llama 2 7B large language model for Python code generation. 
-The methodology is structured in three phases: dataset preparation, fine-tuning, and evaluation. 
-Figure~\ref{fig:flowchart} shows the flowchart of the fine-tuning procedure.
+The methodology is structured in three phases dataset preparation, fine-tuning, and evaluation. 
+Figure~\ref{figflowchart} shows the flowchart of the fine-tuning procedure.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.85\linewidth]{flowchart.png} % Uncomment when you add the figure
-    \caption{Flowchart of the fine-tuning process}
-    \label{fig:flowchart}
+    \includegraphics[width=0.85\linewidth]{flowdiagram.png} % Uncomment when you add the figure
+    \caption{Final Model Block Diagram}
+    \label{figflowdiagram}
 \end{figure}
 
 % ---------------------------------------------------------
@@ -18,45 +18,45 @@ Fine-tuning Llama 2 7B for Python code generation requires a high-quality, domai
 containing diverse programming tasks and their corresponding solutions. 
 We will construct a composite dataset from multiple reputable open-source sources.
 \end{normaltext}
-\subsection{Dataset Sources and Composition:}
+\subsection{Dataset Sources and Composition}
 \begin{normaltext}
 \begin{enumerate}
 \item{ FlyTech Python Code Dataset (2025)}~
 \begin{itemize}
-    \item {Size:} $\sim$42,000 instruction--code pairs
-    \item {Content:} Python scripts with comments, docstrings, and structured tasks
-    \item {Reason for Selection:}
+    \item {Size} $\sim$42,000 instruction--code pairs
+    \item {Content} Python scripts with comments, docstrings, and structured tasks
+    \item {Reason for Selection}
     \begin{itemize}
         \item Curated specifically for code generation
         \item High-quality, well-commented Python code
         \item Diverse mix of algorithmic and real-world examples
     \end{itemize}
-    \item {License:} MIT License (per Hugging Face repository)
+    \item {License} MIT License (per Hugging Face repository)
 \end{itemize}
 
     \item Python Code Instructions 18k (Alpaca-style)
         \begin{itemize}
-            \item {Size:} $\sim$18,000 instruction--response pairs
-            \item {Content:} Instruction prompts and Python code responses
-            \item {Reason for Selection:}
+            \item {Size} $\sim$18,000 instruction--response pairs
+            \item {Content} Instruction prompts and Python code responses
+            \item {Reason for Selection}
             \begin{itemize}
                 \item Matches the instruction-tuning structure required by OPT
                 \item Provides human-readable prompts with explanations
                 \item Complements FlyTech by increasing prompt diversity
             \end{itemize}
-            \item {License:} CC BY-NC 4.0 (non-commercial research use)
+            \item {License} CC BY-NC 4.0 (non-commercial research use)
         \end{itemize}
     
     \item LeetCode/HackerRank Programming Problems (Evaluation Only)
         \begin{itemize}
-            \item {Size:} $\sim$200--300 problems (not used for training)
-            \item {Content:} Problem descriptions + reference solutions written by us
-            \item {Reason for Selection:}
+            \item {Size} $\sim$200--300 problems (not used for training)
+            \item {Content} Problem descriptions + reference solutions written by us
+            \item {Reason for Selection}
                 \begin{itemize}
                     \item Realistic competitive programming tasks
                     \item Enables functional correctness testing
                 \end{itemize}
-            \item {License:}
+            \item {License}
                 \begin{itemize}
                     \item Direct redistribution of LeetCode content is not allowed
                     \item Only prompts used for evaluation (fair use), with our own solutions
@@ -70,32 +70,32 @@ We will construct a composite dataset from multiple reputable open-source source
 \end{normaltext}
 
 
-\subsection{Dataset Processing Pipeline:}
+\subsection{Dataset Processing Pipeline}
 \begin{normaltext}
-    The collected dataset will undergo several preprocessing steps to ensure quality and consistency before training:
+    The collected dataset will undergo several preprocessing steps to ensure quality and consistency before training
     \begin{itemize}
         \item Duplicate removal
         All repeated or identical instruction–code pairs will be removed to eliminate redundancy and reduce overfitting.
 
-        \item Filtering Incomplete Python Code:
+        \item Filtering Incomplete Python Code
         Examples containing syntactically incorrect or incomplete Python code will be discarded using rule-based checks and code-parsing techniques.
-        \item Adding Chain-of-Thought (CoT) Explanations:
+        \item Adding Chain-of-Thought (CoT) Explanations
         Each example will be enriched with a brief chain-of-thought explanation describing the reasoning steps used to solve the instruction.This helps the model learn structured reasoning patterns.
-        \item Normalization and Formatting:
+        \item Normalization and Formatting
         All samples will be standardized with consistent indentation, spacing, variable naming, and overall formatting.
     \end{itemize}
     {Final Dataset Size (Expected)}
     \begin{itemize}
-        \item FlyTech: $\sim$40,000
-        \item Alpaca: $\sim$17,000
-        \item {Total usable examples:} $\sim$57,000
+        \item FlyTech $\sim$40,000
+        \item Alpaca $\sim$17,000
+        \item {Total usable examples} $\sim$57,000
     \end{itemize}
 \end{normaltext}
 
 
-\subsection{Train/Validation Split:}
+\subsection{Train/Validation Split}
 \begin{normaltext}
-We will divide the cleaned dataset into:
+We will divide the cleaned dataset into
 \begin{itemize}
     \item 90\% training set
     \item 5\% validation set
@@ -108,22 +108,22 @@ The evaluation set (LeetCode/HackerRank) remains entirely separate.
 
 \subsection{Instruction Formatting and Tokenization}
 \begin{normaltext}
-    Each training example will be converted into an instruction-style structure:
+    Each training example will be converted into an instruction-style structure
 
     \begin{quote}
     \begin{ttfamily}
-    Instruction: Write a Python code for printing whether a given number is Armstrong.
+    Instruction Write a Python code for printing whether a given number is Armstrong.
 
-    Chain-of-Thought: Check if a number equals the sum of its digits each raised to the power of the number of digits.
+    Chain-of-Thought Check if a number equals the sum of its digits each raised to the power of the number of digits.
 
-    Response:
+    Response
     \begin{verbatim}
-    num = int(input("Enter a number: "))
+    num = int(input("Enter a number "))
     digits = len(str(num))
     armstrong_sum = sum(int(d)**digits for d in str(num))
-    if num == armstrong_sum:
+    if num == armstrong_sum
         print(f"{num} is an Armstrong number")
-    else:
+    else
         print(f"{num} is not an Armstrong number")
     \end{verbatim}
     \end{ttfamily}
@@ -143,27 +143,27 @@ The base model will be loaded with pretrained and 4-bit quantized weights to red
 
 \subsection{Fine-Tuning Approach}
 \begin{normaltext}
-Fine-tuning follows the instruction-tuning paradigm: given a prompt x, the model predicts the next token in the target Python code sequence y.
-To improve reasoning quality and reduce hallucination, we additionally include Chain-of-Thought (CoT) annotations inside the training samples. Each training example consists of:
+Fine-tuning follows the instruction-tuning paradigm given a prompt x, the model predicts the next token in the target Python code sequence y.
+To improve reasoning quality and reduce hallucination, we additionally include Chain-of-Thought (CoT) annotations inside the training samples. Each training example consists of
 Instruction
 Human-written reasoning (CoT)
 Final code output
 This encourages the model to learn step-by-step reasoning patterns before producing the final answer.
-Mathematically, the model maximizes the likelihood of the entire sequence consisting of instruction, reasoning, and output:
+Mathematically, the model maximizes the likelihood of the entire sequence consisting of instruction, reasoning, and output
 
 
 \begin{equation}
 \text{loss} = -\sum_{t=1}^{T} \log P_{\theta} (y_{t}^{\text{true}} \mid y_{<t}, x)
 \end{equation}
 
-Model parameters are updated using gradient descent:
+Model parameters are updated using gradient descent
 
 \begin{equation}
 \theta_{i+1} \leftarrow \theta_i - \alpha \frac{\partial (\text{loss})}{\partial \theta}
 \end{equation}
 
 CoT Integration
-The CoT component explicitly teaches the model:
+The CoT component explicitly teaches the model
 how to plan the solution
 how to reason before generating code
 This approach is known to significantly reduce hallucinations and improve generalization in small models.
@@ -171,7 +171,7 @@ This approach is known to significantly reduce hallucinations and improve genera
 % ---------------------------------------------------------
 \subsection{QLoRA for Efficient Training}
 
-QLoRA enables parameter-efficient fine-tuning by:
+QLoRA enables parameter-efficient fine-tuning by
 \begin{itemize}
     \item Keeping the pretrained model weights frozen
     \item Loading weights in 4-bit quantization
@@ -181,7 +181,7 @@ QLoRA enables parameter-efficient fine-tuning by:
 %     \centering
 %     \includegraphics[width=0.85\linewidth]{without_qlora.png} % Uncomment when you add the figure
 %     \caption{Base Model Finetuning with out QLoRA Adapter Layers}
-%     \label{fig:Base Model Finetuning with out QLoRA Adapter Layer}
+%     \label{figBase Model Finetuning with out QLoRA Adapter Layer}
 % \end{figure}
 
 \begin{figure}[h]
@@ -189,7 +189,7 @@ QLoRA enables parameter-efficient fine-tuning by:
     \includegraphics[width=0.85\linewidth]{with_qlora.png} 
     % Uncomment when you add the figure
     \caption{Base Model Finetuning with QLoRA Adapter Layers}
-    \label{fig:Base Model Finetuning with QLoRA Adapter Layersg}
+    \label{figBase Model Finetuning with QLoRA Adapter Layersg}
 \end{figure}
 
 Only the adapter matrices are optimized.This allows us to incorporate CoT-augmented samples without increasing memory usage, making training feasible in Google Colab.
@@ -200,13 +200,13 @@ CoT pairs tend to be longer, but QLoRA’s memory-efficient structure allows han
 \section{Training Setup}
 \begin{normaltext}
     \begin{itemize}
-        \item \textbf{Platform:} Google Colab
-        \item \textbf{Optimizer:} AdamW
-        \item \textbf{Hyperparameters:} learning rate, batch size, and epochs tuned using validation loss
-        \item \textbf{Regularization:} Dropout applied to adapter layers
-        \item \textbf{Early stopping:} Enabled based on validation loss
-        \item \textbf{Batching:} Token-based batching, using the maximum number of tokens that fit in GPU memory (typically 8k–32k tokens per batch on Colab)
-        \item \textbf{Multiple Session:} If needed, training will be split across multiple Colab sessions with checkpointing
+        \item \textbf{Platform} Google Colab
+        \item \textbf{Optimizer} AdamW
+        \item \textbf{Hyperparameters} learning rate, batch size, and epochs tuned using validation loss
+        \item \textbf{Regularization} Dropout applied to adapter layers
+        \item \textbf{Early stopping} Enabled based on validation loss
+        \item \textbf{Batching} Token-based batching, using the maximum number of tokens that fit in GPU memory (typically 8k–32k tokens per batch on Colab)
+        \item \textbf{Multiple Session} If needed, training will be split across multiple Colab sessions with checkpointing
     \end{itemize}
 
 
@@ -228,12 +228,12 @@ The fine-tuned model will be compared against the base Llama 2 7B model using tw
 \begin{enumerate}
     \item{Functional Correctness (Primary Evaluation)}
 
-        Generated solutions will be executed in a secure Docker-based sandbox. Each result is classified as:
+        Generated solutions will be executed in a secure Docker-based sandbox. Each result is classified as
 
         \begin{itemize}
-            \item \textbf{Right:} Correct output for all test cases
-            \item \textbf{Partial:} Runs but fails some test cases
-            \item \textbf{Wrong:} Crashes or produces incorrect output
+            \item \textbf{Right} Correct output for all test cases
+            \item \textbf{Partial} Runs but fails some test cases
+            \item \textbf{Wrong} Crashes or produces incorrect output
         \end{itemize}
 
         This directly measures true problem-solving ability.
@@ -241,8 +241,8 @@ The fine-tuned model will be compared against the base Llama 2 7B model using tw
     \item{Automatic Similarity Metrics (BLEU, CodeBLEU)}
 
         \begin{itemize}
-            \item \textbf{BLEU:} Evaluates token-level similarity to reference solutions
-            \item \textbf{CodeBLEU:} Incorporates syntax, data-flow, and semantic structure; more suitable for code generation
+            \item \textbf{BLEU} Evaluates token-level similarity to reference solutions
+            \item \textbf{CodeBLEU} Incorporates syntax, data-flow, and semantic structure; more suitable for code generation
         \end{itemize}
 
         These are used as supporting quantitative metrics alongside functional evaluation.

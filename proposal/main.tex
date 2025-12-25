@@ -6,6 +6,7 @@
 
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
+\usepackage{tabularx}
 \bibliographystyle{IEEEtran}
 
 
@@ -26,7 +27,7 @@
 \vspace{0.1cm}
 {\large \textbf{{\\on}}}
 \vspace{0.1cm}
-{\large \textbf{{\\Fine Tuning of OPT-350M for Python code generation}}}
+{\large \textbf{{\\Fine Tuning of Llama-2 7B for Python Code Generation}}}
 \vspace{2cm}
 {\large \textbf{\\Submitted by:}}
 {\large {{\\Deep Shrestha (THA079BCT011)}}}
@@ -42,7 +43,7 @@
 {\large \\Thapathali Campus}
 {\large \\Kathmandu, Nepal}
 \vspace{2cm}
-{\large {\\December 26, 2025}}
+{\large {\\December 25, 2025}}
 
 \end{center}
 \include{acknowledgement}
@@ -60,17 +61,19 @@
 \addcontentsline{toc}{chapter}{List of Abbreviations}
 \chapter*{List of Abbreviations}
 \begin{normaltext}
-    LLM: Large Language Model
-    \\LoRA: Low-Rank Adaptation
-    \\QLoRA: Quantized Low-Rank Adaptation
-    \\PEFT: Parameter-Efficient Fine-Tuning
-    \\LLaMA: Large Language Model Meta AI
-    \\NF4: 4-bit NormalFloat
-    \\CoT: Chain-of-Thought
-    \\BLEU: Bilingual Evaluation Understanding
-    \\GPT: Generative Pre-trained Transformer
-    \\OPT: Open Pre-trained Transformer
-    \\IDE: Integrated Development Environment
+\begin{tabularx}{\textwidth}{@{}>{\bfseries}r@{:\ }X@{}}
+LLM   & Large Language Model \\
+LoRA  & Low-Rank Adaptation \\
+QLoRA & Quantized Low-Rank Adaptation \\
+PEFT  & Parameter-Efficient Fine-Tuning \\
+LLaMA & Large Language Model Meta AI \\
+NF4   & 4-bit NormalFloat \\
+CoT   & Chain-of-Thought \\
+BLEU  & Bilingual Evaluation Understanding \\
+GPT   & Generative Pre-trained Transformer \\
+OPT   & Open Pre-trained Transformer \\
+IDE   & Integrated Development Environment \\
+\end{tabularx}
 \end{normaltext}
 \setcounter{chapter}{0}
 \include{introduction}
