@@ -1,0 +1,20 @@
+\chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{Abstract}
+\begin{normaltext}
+    Fine-tuning large language models will require intensive hardware resources, making full fine-tuning infeasible to train under low resouces constraints. Although some large language models are better in python code generation but they are not feasible for training in custom datasets. Many researches have been done on scaling the model size but not on utilizing small or medium language model for resouces efficient adaptation. Addressing this gap requires efficient fine-tuning that requires reducing memory and computation overhead.
+
+    This project aims to fine-tune Open Pretrained Transformer (OPT-350M) for python code generation by Parameter Efficient Fine Tuning (PEFT) with QLoRA, focusing on the hardware level constraints.
+    
+    
+    The training dataset is constructed from multiple open-source repositories, including FlyTech, Hugging Face 2025, StaQC.
+    The datasets consists of python problems description paired with the corresponding code solutions. These datasets contains basic python programming problems commonly found competitive programming platforms such as LeetCode. Preprocessing involves filtering non-Python samples, cleaning noisy code, and formatting the data into instruction–response pairs suitable for supervised fine-tuning.
+
+    The fine-tuned model will be evaluated on unseen python problems. Evauation is performed using set of coding problems. The generated code is evaluated based on syntactic correctness, correctness on logic, and alignment with expected outputs. Performence will be compared with the base model OPT-350M to assess improvement achieved through fine-tuning OPT-350M. 
+
+    The Fine-tuned model will be capable of generating python code solutions for common coding exercises, using mixture of common programming problems and LeetCode problems as a benchmark on low edge devices. 
+    
+\vspace{18 pt}
+
+Keywords: PEFT, QLoRA, LoRA, OPT, Hugging Face, Pretraining, Fine-tuning. 
+
+\end{normaltext}

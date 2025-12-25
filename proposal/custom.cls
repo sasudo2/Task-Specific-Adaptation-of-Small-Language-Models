@@ -18,6 +18,7 @@
 \RequirePackage{caption}
 \RequirePackage{tocloft}
 \RequirePackage{amsmath}     % Math support
+\RequirePackage{pgfgantt}    % Gantt charts
 
 % Page layout
 \geometry{
