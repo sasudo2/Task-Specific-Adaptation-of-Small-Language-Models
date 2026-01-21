@@ -1,43 +1,32 @@
 \setcounter{page}{1}
 \pagenumbering{arabic}
-\chapter{Introduction}
+\chapter{INTRODUCTION}
 \section{Background}
 \begin{normaltext}
-Advent of Large Language Models (LLMs) have fundamentally changed the software development and code writing process. LLMs have become integral part of the workflow for developers and students. Even with this much success, \cite{Kaplan2020Scaling} demonstrate that LLMs rely on massive datasets and significant computational power to improve performance. This reliance on big Graphics Processing Units (GPUs) for training and running models makes them nearly impossible for students and the general public to run locally.
+The advent of Large Language Models (LLMs) has fundamentally changed the software development and code writing process. LLMs have become an integral part of the workflow for developers and students. Even with this much success, \cite{Kaplan2020Scaling} demonstrate that LLMs rely on massive datasets and significant computational power to improve performance. This reliance on big Graphics Processing Units (GPUs) for training and running models makes them nearly impossible for students and the general public to run locally.
 
 
 \vspace{18 pt}
-\section{Motivaiton}
-Currently, state-of-the-art LLMs are primarily accessed through APIs for code generation. While smaller open-source models like Llama-2-7B \cite{Touvron2023Llama2} are available to run on single consumer GPU, their performance often falls short due to limited parameter scale. In our initial research, we found that generating Python code locally using these smaller base models resulted in poor code quality and high error rates. To bridge this gap, we explored fine-tuning, a process that specializes general models for specific tasks \cite{Howard2018ULMFiT}. However, full fine-tuning is computationally prohibitive for students under resource constraints. This can be addressed using Parameter-Efficient Fine-Tuning (PEFT) through Quantized Low-Rank Adaptation (QLoRA) \cite{Dettmers2023}, which quantizes the model to 4-bit precision and trains a minimal set of adapter weights \cite{Hu2021}, achieving performance comparable to full fine-tuning on limited hardware. Furthermore, to mitigate hallucinations and improve logic, we incorporate Chain-of-Thought (CoT) into the training dataset. This technique has been shown to significantly enhance the reasoning capabilities of models in complex domains like programming \cite{Li2023CoTCodeGen}. Consequently, our goal is to fine-tune Llama-2 7B using QLoRA on a high-quality Python dataset, which we will prepare (manually and with the help of LLMs), integrated with reasoning chains.
+\section{Motivation}
+Currently, state-of-the-art LLMs are primarily accessed through APIs for code generation. While smaller open-source models like Llama-2 7B \cite{Touvron2023Llama2} are available to run on single consumer GPU, their performance often falls short due to limited parameter scale. In our initial research, we found that generating Python code locally using these smaller base models resulted in poor code quality and high error rates. To bridge this gap, we explored fine-tuning, a process that specializes general models for specific tasks \cite{Howard2018ULMFiT}. However, full fine-tuning is computationally prohibitive for students under resource constraints. This can be addressed using Parameter-Efficient Fine-Tuning (PEFT) through Quantized Low-Rank Adaptation (QLoRA) \cite{Dettmers2023}, which quantizes the model to 4-bit precision and trains a minimal set of adapter weights \cite{Hu2021}, achieving performance comparable to full fine-tuning on limited hardware. Furthermore, to mitigate hallucinations and improve logic, we incorporate Chain-of-Thought (CoT) into the training dataset. This technique has been shown to significantly enhance the reasoning capabilities of models in complex domains like programming \cite{Li2023CoTCodeGen}. Consequently, our goal is to fine-tune Llama-2 7B using QLoRA on a high-quality Python dataset, which we will prepare (manually and with the help of LLMs), integrated with reasoning chains.
 
 \vspace{18 pt}
 \section{Problem Definition}
-\begin{enumerate}
-    \item Quality Gap: Standard Llama-7B models often produce syntactically incorrect or logically flawed Python code compared to massive API-based models.
-    \item Resource Constraints: Full fine-tuning of 7B models exceeds the VRAM capacity of consumer GPUs (e.g., NVIDIA T4/RTX 3060), making optimization inaccessible for students.
-    \item Logic Issues (Hallucination): Small models often guess code structure rather than planning it, leading to hallucinations in complex programming tasks
-\end{enumerate}
+The standard Llama-2 7B model suffers from a significant quality gap, frequently producing syntactically incorrect or logically flawed Python code compared to massive proprietary systems \cite{Diehl2024Llama2Benchmark}. Furthermore, resource constraints make full fine-tuning inaccessible, as it exceeds the VRAM capacity of consumer-grade GPUs like the NVIDIA T4 or RTX 3060. It also face persistent logic issues, often guessing code structures and hallucinating during complex programming tasks rather than following a planned approach. 
 
 \vspace{18 pt}
 \section{Objectives}
-The primary objective of this project is to evaluate a resource-efficient fine-tuning pipeline that provides access to high-performance code generation to general public. By leveraging 4-bit Quantized Low-Rank Adaptation (QLoRA) and Chain-of-Thought (CoT) enhanced datasets, this project aims to bridge the performance gap between lightweight models and proprietary high-parameter systems. The goal is to specialize a Llama-2-7B model to generate robust, logically sound Python code while sticking to a strict 16GB VRAM constraint. This enables the deployment of sophisticated, domain-specific programming assistants on consumer-grade hardware, ensuring that high-quality automated software development tools remain accessible to students.
+\begin{itemize}
+    % \item To use QLoRA as a compression technique to achieve a high-quality model to run on standard consumer hardware.
+    \item To use QLoRA for compression and fine tuning of Llama-2 7B model so that it can run on standard consumer hardware for python code generation.
+  
+\end{itemize}
+
+\vspace{10 pt}
+\section{Scope and Applications}
+This project focuses on specializing the Llama-2 7B model for Python programming, specifically improving its ability to handle complex logic and various libraries. By using 4-bit QLoRA, the training is kept within a strict 16GB VRAM limit, ensuring the system remains compatible with consumer-level hardware and Google Colab.
+The model is trained using Chain-of-Thought reasoning traces, dataset either gathered manually or sourced from datasets like Alpaca-18k, to teach it step-by-step problem-solving. Success will be measured by comparing the original and fine-tuned models against a series of Python coding tasks and LeetCode challenges.
 
 \vspace{18 pt}
-\section{Scope and Applications}
-\begin{enumerate}
-    \item \textbf{Model Selection:} The project is limited to the 7-billion parameter range (Llama-7B). Larger models (8B, 13B, 70B) are outside the scope due to hardware constraints on Google Colab free tier.
-    \item \textbf{Target Language:} The primary focus of the fine-tuning is Python programming. While the model may retain general knowledge, its optimization will specifically target Python syntax, logic, and common libraries (like NumPy or Pandas).
-    \item \textbf{Methodological Focus:} The project utilizes PEFT (Parameter-Efficient Fine-Tuning) specifically via the 4-bit QLoRA technique. Full-parameter fine-tuning is excluded from this study.
-    \item \textbf{Training Data:} The scope includes the use of Reasoning Traces (Chain-of-Thought). The dataset will either be made with mix of manual work and LLM distillation or sourced from open-source repositories (like Alpaca-18k) and preprocessed for adding Reasoning Traces.
-    \item \textbf{Hardware Constraint:} The research and training are strictly confined to consumer-level hardware (approx. 16GB VRAM) to prove the viability of high-quality local coding assistants. But if some problem come during training phase in google colab we will use colab pro for training only model will still be used with consumer-level GPUs.
-    \item \textbf{Evaluation:} The results of both the models original one and fine-tuned one will be compared against same question sets (mix of normal and leetcode question ) to analyze the improvement made on original model.
-\end{enumerate}
-
-\section{Application}
-\begin{enumerate}
-    \item \textbf{Local Integrated Development Environments (IDEs):} The model can be integrated into code editors (like VS Code via the "Continue" or "CodeGPT" extensions) to provide real-time code completion and debugging suggestions without an internet connection.
-    \item \textbf{Privacy:} People working with sensitive or proprietary source code can use this model to automate coding tasks. Because it runs locally ensuring data sovereignty.
-    \item \textbf{Educational \& Algorithmic Tools:} Because the model is trained with Chain-of-Thought, it doesn't just provide the code; it explains the logic. This makes it a valuable tool for students to understand why a specific Python logic or algorithm was chosen, acting as a step-by-step programming tutor.
-\end{enumerate}
-
+This project offers various practical benefits after the model is fine-tuned: it enables local IDE integration for real-time, offline coding help in tools like VS Code; it ensures data privacy by allowing sensitive code to be processed entirely on-site; and it serves as an educational tutor, using Chain-of-Thought reasoning to provide step-by-step logical explanations rather than just raw code.
 \end{normaltext}
