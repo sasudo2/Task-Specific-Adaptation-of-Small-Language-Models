@@ -9,7 +9,8 @@ model = AutoModelForCausalLM.from_pretrained(
     model_name,
     device_map="auto",      
     torch_dtype=torch.float16,
-    load_in_8bit=True       
+    load_in_8bit=True,
+    llm_int8_enable_fp32_cpu_offload=True
 )
 
 def generate_code(prompt: str) -> str:
