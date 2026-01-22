@@ -1,0 +1,11 @@
+FROM python:3.10-slim
+
+# Disable networking
+RUN useradd -m sandbox
+USER sandbox
+
+WORKDIR /app
+
+COPY docker_runner.py /app/docker_runner.py
+
+CMD ["python", "/app/docker_runner.py"]
