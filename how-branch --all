@@ -1,0 +1,30 @@
+* [33m33090f6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31mupstream/main[m[33m)[m created sandbox
+* [33mc6e82f5[m clean codeforces dataset
+*   [33m2866689[m Merge pull request #1 from sasudo2/workstation
+[32m|[m[33m\[m  
+[32m|[m * [33m66487a7[m[33m ([m[1;31mupstream/workstation[m[33m)[m wrote a base code for fine tuning process
+[32m|[m[32m/[m  
+* [33m24226bb[m Create codeforces_datasets_preparation.md
+* [33m0c67756[m added the documentation of sandbox
+* [33m305b7d6[m made a sandbox for evaluation
+* [33maf52394[m removed pngs
+* [33m515864a[m cleaned taco co dataset
+* [33mcbdef2b[m added the notebook of alpaca and leetcode datasets preparation and it's documentation
+* [33m237bc03[m more changes in each level
+* [33m02357a2[m feasibility study
+* [33m9bea690[m few changes
+* [33m4a49e66[m making new changes
+* [33md23a4a4[m making new changes
+* [33m92efcff[m updated expected outcome
+* [33maa2af1d[m making things better
+* [33mc7bcf4a[m changed some code with respect to llama
+* [33m47a1d0b[m adding new things
+* [33md02b04e[m adding flow chart
+* [33m51482bd[m methodology changes
+* [33m388f535[m Add .gitignore for LaTeX; stop tracking generated artifacts
+*   [33m4a8762c[m Resolve merge conflicts in generated LaTeX artifacts (kept ours)
+[34m|[m[35m\[m  
+[34m|[m * [33md58ce8a[m coded some methodology code
+* [35m|[m [33mb091f3c[m making more changes
+[35m|[m[35m/[m  
+* [33m3130ba9[m creating proposal
