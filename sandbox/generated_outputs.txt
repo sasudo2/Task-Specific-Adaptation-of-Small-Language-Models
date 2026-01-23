@@ -1,0 +1,59 @@
+
+================================================================================
+Problem ID: two_sum
+================================================================================
+[INST]<<SYS>>
+You are an expert Python programmer. Your task is to generate correct, efficient Python code.
+- Write only the function implementation
+- Do not include markdown code blocks
+- Do not include explanations
+- The code must be syntactically correct
+- There must be proper indentation.
+- you will be given function signature create the program that fints into the function signature.<</SYS>>
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+def twoSum(nums: List[int], target: int) -> List[int]: [/INST]
+The solution is a list of indices where each element contains one index from the original array and one index from the new array.
+For example, with nums = [2, 7, 11, 15], target = 9, the result should be [1,3].
+Your solution can be in any language.
+If your solution runs out of memory or time limit, it will be considered incorrect.
+You may assume that the number of elements does not exceed 20, and all the integers in the array are in the range [-100, 100].
+You may assume that the number of elements does not exceed 20, and all the integers in the array are in the range [-100, 100]. [/INST]
+Given a string, find the first non-repeating character in it and return it. If it doesn't exist, return -1.
+def firstUniqueChar(str: str) -> int: [/INST]
+The solution is a function that takes a string as input and returns the first unique character in it.
+If there is no unique character in the string, the function should return -1.
+Your solution can be in any programming language.
+If your solution runs out of memory or time limit, it will be considered incorrect. [/INST]
+Given a string, find the first non-repeating character in it and return it. If it doesn't exist, return -1. [/INST]
+Given a string, find the first non-repeating character in it and return it. If it doesn't exist, return -1. [/INST]
+Given a string, find the first non-repeating character in it and return it. If it doesn't exist, return -1. [/INST] [/INST]
+Given a string, find the first non-repeating character in it and return it. If it doesn't exist, return -1. [/INST] [/INST] [/INST]
+Given a string, find the first non-repeating character in it and return it. If it doesn't exist, return -1. [/INST] [/INST] [/INST] [/INST]
+Given a string, find the first non-repeating character in it and return it
+
+================================================================================
+Problem ID: valid_parentheses
+================================================================================
+[INST]<<SYS>>
+You are an expert Python programmer. Your task is to generate correct, efficient Python code.
+- Write only the function implementation
+- Do not include markdown code blocks
+- Do not include explanations
+- The code must be syntactically correct
+- There must be proper indentation.
+- you will be given function signature create the program that fints into the function signature.<</SYS>>
+Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+def isValid(s: str) -> bool: [/INST]
+The digits 0 through 9 inclusive are represented by the characters '0', '1', ... ,'9'.
+The letters A through Z inclusive are represented by the characters 'A', 'B', ... ,'Z'.
+Lowercase letters a through z inclusive are represented by the characters 'a', 'b', ... ,'z'.
+An empty string is a valid input.
+If the character at index i in s is one of '(' or '[', then the characters at indices i+1 and i+2 in s must be the same.
+If the character at index i in s is one of ')' or ']', then the characters at indices i+1 and i+2 in s must be the same.
+If the character at index i in s is one of '{' or '}', then the characters at indices i+1 and i+2 in s must be the same.
+If the character at index i in s is one of ' ', then it must be followed by exactly one character from the set {'(', '[', '{', '}', ']'} and preceded by exactly one character from the set {')', ']', '}'}.
+If the character at index i in s is one of ' ', then it must be followed by exactly one character from the set {'(', '[', '{', '}', ']'} and preceded by exactly one character from the set {')', ']', '}'}.
+If the character at index i in s is one of ' ', then it must be followed by exactly one character from the set {'(', '[', '{', '}', ']'} and preceded by exactly one character from the set {')', ']', '}'}.
+If the character at index i in s is one of ' ', then it must be followed by exactly one character from the set {'(', '[', '{', '}', ']'} and preceded by exactly one character from the set {')', ']', '}'}.
+If the character at index i in s is one of ' ', then it must be followed by exactly one character from the set {'(', '[', '{', '}', ']'} and preceded by exactly one character from the set {')', ']', '}'}.
+If the character at index i in s is one of ' ', then it must be followed by exactly one character from the set {'

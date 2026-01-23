@@ -42,6 +42,14 @@ def run_in_docker(code, fn_name, test, limits):
 def run_problem(problem):
     prompt = f"{problem['prompt']}\n{problem['function_signature']}"
     model_output = generate_code(prompt)
+    
+    # Append generated output to file
+    with open("generated_outputs.txt", "a") as f:
+        f.write(f"\n{'='*80}\n")
+        f.write(f"Problem ID: {problem['id']}\n")
+        f.write(f"{'='*80}\n")
+        f.write(model_output)
+        f.write("\n")
 
     fn_name = problem["function_signature"].split("(")[0].replace("def ", "").strip()
     try:
@@ -67,7 +75,7 @@ def run_problem(problem):
     return {"id": problem["id"], "status": "accepted"}
 
 def main():
-    problems = json.load(open("leetcode_eval_set.json"))
+    problems = json.load(open("leetcode_eval_set_test.json"))
     results = [run_problem(p) for p in problems]
 
     json.dump(results, open("results.json", "w"), indent=2)
