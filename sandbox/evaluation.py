@@ -45,7 +45,23 @@ def run_in_docker(code, fn_name, test, limits):
 
 def run_problem(problem):
     prompt = f"{problem['prompt']}\n{problem['function_signature']}"
-    model_output = generate_code(prompt)
+    system_prompt = """You are an expert Python programmer. Your task is to generate correct, efficient Python code.
+    - Write only the function implementation
+    - Do not include markdown code blocks
+    - Do not include explanations
+    - The code must be syntactically correct
+    - There must be proper indentation.
+    - you will be given function signature 
+    - create the program that fits into the function signature.
+    - always enclose code only between ``` and ```.
+    - Do not reason
+    - Do not give any examples
+    """
+    
+    # Combine system prompt with user prompt
+    full_prompt = f"[INST]<<SYS>>{system_prompt}<</SYS>>\n{prompt}[/INST]"
+    
+    model_output = generate_code(full_prompt)
     
     # Append generated output to file
     with open("generated_outputs.txt", "a") as f:

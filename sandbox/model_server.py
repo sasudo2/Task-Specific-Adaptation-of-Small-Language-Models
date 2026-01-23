@@ -7,22 +7,8 @@ app = Flask(__name__)
 def generate_code():
     data = request.json
     prompt = data['prompt']
-    system_prompt = """You are an expert Python programmer. Your task is to generate correct, efficient Python code.
-- Write only the function implementation
-- Do not include markdown code blocks
-- Do not include explanations
-- The code must be syntactically correct
-- There must be proper indentation.
-- you will be given function signature 
-- create the program that fits into the function signature.
-- always enclose code only between ``` and ```.
-- Do not reason
-- Do not give any examples
-"""
     
-    # Combine system prompt with user prompt
-    full_prompt = f"[INST]<<SYS>>{system_prompt}<</SYS>>\n{prompt}[/INST]"
-    inputs = tokenizer(full_prompt, return_tensors="pt").to(model.device)
+    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     output = model.generate(
         **inputs,
         max_new_tokens=1024,
