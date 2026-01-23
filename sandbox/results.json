@@ -1,11 +1,11 @@
 [
   {
     "id": "two_sum",
-    "status": "wrong_answer"
+    "status": "accepted"
   },
   {
     "id": "valid_parentheses",
-    "status": "compile_error"
+    "status": "wrong_answer"
   },
   {
     "id": "merge_sorted_arrays",
