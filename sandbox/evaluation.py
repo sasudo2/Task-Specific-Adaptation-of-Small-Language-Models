@@ -1,9 +1,13 @@
 import json
 import subprocess
-from model_runner import generate_code
+import requests
 from code_extractor import extract_function
 
 IMAGE = "python-sandbox"
+
+def generate_code(prompt):
+    response = requests.post('http://localhost:5000/generate', json={'prompt': prompt})
+    return response.json()['code']
 
 def run_in_docker(code, fn_name, test, limits):
     payload = {
@@ -75,7 +79,7 @@ def run_problem(problem):
     return {"id": problem["id"], "status": "accepted"}
 
 def main():
-    problems = json.load(open("leetcode_eval_set_test.json"))
+    problems = json.load(open("leetcode_eval_set.json"))
     results = [run_problem(p) for p in problems]
 
     json.dump(results, open("results.json", "w"), indent=2)

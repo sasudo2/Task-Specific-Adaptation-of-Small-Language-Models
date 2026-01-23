@@ -5,7 +5,7 @@
     "difficulty": "easy",
     "topic": ["array", "hashmap"],
     "prompt": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-    "function_signature": "def twoSum(nums: List[int], target: int) -> List[int]:",
+    "function_signature": "def twoSum(nums: list[int], target: int) -> list[int]:",
     "constraints": "2 <= len(nums) <= 10000",
     "public_tests": [
       { "input": [[2,7,11,15], 9], "output": [0,1] }
@@ -24,7 +24,7 @@
     "title": "Valid Parentheses",
     "difficulty": "easy",
     "topic": ["stack"],
-    "prompt": "Given a string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.",
+    "prompt": "Given a string containing just the characters '(', ')', '{', '}', '[' and ']', write python code to determine if the input string is valid.",
     "function_signature": "def isValid(s: str) -> bool:",
     "constraints": "1 <= len(s) <= 10000",
     "public_tests": [

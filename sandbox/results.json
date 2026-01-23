@@ -1,10 +1,38 @@
 [
   {
     "id": "two_sum",
-    "status": "compile_error"
+    "status": "wrong_answer"
   },
   {
     "id": "valid_parentheses",
     "status": "compile_error"
+  },
+  {
+    "id": "merge_sorted_arrays",
+    "status": "wrong_answer"
+  },
+  {
+    "id": "max_subarray",
+    "status": "runtime_error"
+  },
+  {
+    "id": "group_anagrams",
+    "status": "wrong_answer"
+  },
+  {
+    "id": "coin_change",
+    "status": "accepted"
+  },
+  {
+    "id": "number_of_islands",
+    "status": "runtime_error"
+  },
+  {
+    "id": "merge_k_lists",
+    "status": "compile_error"
+  },
+  {
+    "id": "trapping_rain_water",
+    "status": "wrong_answer"
   }
 ]
