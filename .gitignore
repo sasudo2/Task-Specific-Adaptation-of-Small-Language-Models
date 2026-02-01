@@ -24,3 +24,4 @@
 # PDFs generated from sources (avoid committing compiled output)
 *.pdf
 *.csv
+.env
