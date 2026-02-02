@@ -1,0 +1,49 @@
+\chapter{LITERATURE REVIEW}
+\begin{normaltext}
+\vspace{18pt}
+\section{Transformer Architecture and Attention Mechanism}
+The foundation of modern large language models is built on the Transformer architecture introduced by Vaswani et al. \cite{Vaswani2017}. The "Attention Is All You Need" paper presents the self-attention mechanism and encoder-decoder architecture that forms the basis for contemporary LLMs. This revolutionary approach has become the de facto standard for natural language processing tasks and remains the core architecture for models discussed in this review.
+
+\vspace{18pt}
+\section{Scaling Laws and Transfer Learning}
+Understanding the scaling properties of neural language models is crucial for efficient model development. Kaplan et al. \cite{Kaplan2020Scaling} established fundamental scaling laws for neural language models, providing insights into how model performance improves with increased parameters, training data, and computational resources. Additionally, Howard and Ruder \cite{Howard2018ULMFiT} introduced Universal Language Model Fine-tuning (ULMFiT), demonstrating that transfer learning from pre-trained models can achieve state-of-the-art results on text classification tasks with limited labeled data. These foundational works highlight the effectiveness and efficiency of fine-tuning approaches.
+
+\vspace{18pt}
+\section{Few-Shot Learning and In-Context Learning}
+Brown et al. \cite{Brown2020} demonstrated that large language models exhibit remarkable few-shot learning capabilities, introducing GPT-3 and showing that models with sufficient scale can perform new tasks from just a few examples without explicit parameter updates. This capability has become fundamental to understanding how LLMs can be adapted for various downstream tasks.
+
+\vspace{18pt}
+\section{Parameter-Efficient Fine-Tuning (PEFT)}
+Beyond LoRA and QLoRA, parameter-efficient approaches have gained significant attention. Houlsby et al. \cite{Houlsby2019} introduced parameter-efficient transfer learning for NLP through adapter modules, demonstrating that significant performance can be achieved by training only a small fraction of parameters. More recently, Liu et al. \cite{Liu2024DoRA} proposed DoRA (Weight-Decomposed Low-Rank Adaptation), which decomposes weight matrices into magnitude and direction components, providing further improvements over standard LoRA in various tasks.
+
+\vspace{18pt}
+\section{Low Rank Adaptation (LoRA)}
+Hu et al.\cite{Hu2021} introduced LoRA, which freezes pre-trained model weights and injects trainable rank decomposition matrices into each Transformer layer. This approach reduces trainable parameters by 10,000 times and GPU memory requirements by 3 times compared to full fine-tuning of GPT-3 175B, enabling efficient adaptation on modest hardware without significant performance degradation.
+
+\vspace{18pt}
+\section{Quantized Low-Rank Adaptation (QLoRA)}
+Dettmers et al.\cite{Dettmers2023} extended LoRA by combining quantization with low-rank adaptation. QLoRA introduces 4-bit NormalFloat (NF4), Double Quantization, and Paged Optimizers to achieve further memory reduction. This approach achieved 99.3\% of ChatGPT's performance with only 24 hours of single-GPU training, demonstrating that small, high-quality datasets are sufficient for state-of-the-art results when paired with efficient fine-tuning techniques.
+
+\vspace{18pt}
+\section{Open LLMs}
+Many Large Language Models have been released for public use and for research purpose. Zhang et al. \cite{Zhang2022} released Open Pre-trained Transformers (OPT), a suite of decoder-only pre-trained models ranging from 125M to 175B parameters with full model weights made publicly available. The OPT models does not work well with declarative instructions or point-blank interrogatives \cite{Zhang2022}. Touvron et al. \cite{Touvron2023Llama2} introduced Llama 2, a family of pre-trained and fine-tuned LLMs ranging from 7B to 70B parameters. Llama 2 models outperform open-source models of similar size and are competitive with proprietary models like GPT-3.5 and PaLM 2 on various benchmarks. With its larger training dataset and superior architecture, Llama 2 demonstrates strong capabilities in code generation tasks compared to earlier models like OPT. Diehl et al. \cite{Diehl2024Llama2Benchmark} conducted comprehensive benchmarking of Llama-2 70B across multiple programming languages, evaluating its capabilities in code generation, documentation, translation, and unit test creation. Their findings reveal that while the model performs well on simpler numerical tasks, it faces substantial challenges with complex, parallelized, or distributed computations, requiring significant manual corrections for production-ready code.
+
+\vspace{18pt}
+\section{Domain-Specific Application}
+The practical effectiveness of Parameter Efficient Fine-Tuning (PEFT) techniques is demonstrated in fine-tuning CodeLlama-7B for Fortran code generation \cite{Govande2024}. Using LoRA to adapt only attention weights while freezing MLP modules, the researchers fine-tuned the model on high-quality Fortran code from public repositories and NASA codebases, with GPT-3.5 generated descriptions. The fine-tuned model significantly outperformed vanilla CodeLlama-7B-Instruct, achieving 41\% improvement in compilation rate, 150\% improvement in execution rate, and 75\% improvement in correct output rate on 540 LeetCode problems.
+
+\vspace{18pt}
+\section{Chain-of-Thought and Code Generation}
+Li et al. \cite{Li2023CoTCodeGen} explored chain-of-thought prompting techniques for code generation, demonstrating how decomposing complex programming tasks into step-by-step reasoning improves model performance. This approach has proven valuable in enhancing code quality and correctness when generating code solutions.
+
+\vspace{18pt}
+\section{Evaluation Metrics for Code Generation}
+Proper evaluation of generated code is critical for assessing model performance. Papineni et al. \cite{Papineni2002} introduced BLEU (Bilingual Evaluation Understanding), a widely-used automatic evaluation metric for machine translation and code generation tasks. While BLEU provides a standardized measurement, additional metrics specific to code compilation and execution are often necessary for comprehensive evaluation.
+
+\vspace{18pt}
+\section{Training with Noisy Labels}
+Zhang and Sabuncu \cite{Zhang2018GCE} proposed Generalized Cross Entropy Loss for training deep neural networks with noisy labels. This technique is relevant when training on synthetic or imperfect code datasets, where maintaining robustness against label noise is essential for model reliability.
+
+
+
+\end{normaltext}
