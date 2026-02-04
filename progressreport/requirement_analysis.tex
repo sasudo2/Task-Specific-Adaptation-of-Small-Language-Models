@@ -54,3 +54,22 @@ Hyperparameter tuning is performed on 5\% of the merged dataset. This phase iden
 
 \subsection{Full Fine-tuning}
 Once optimal parameters are identified, the full dataset is utilized for final fine-tuning. This stage requires the High-RAM and high-tier GPU capabilities of \textbf{Colab Pro} to avoid Out-of-Memory (OOM) errors during the weight merging and checkpointing stages.
+
+\section{Sandbox Evaluation Environment}
+To ensure the reliability and performance of the fine-tuned Llama 2 7B model, a dedicated evaluation sandbox was developed using containerization.
+
+\subsection{Dockerized Environment}
+A Docker container was created to provide a consistent, isolated, and reproducible environment for model inference. The container encapsulates all dependencies (Transformers, BitsAndBytes, and PEFT adapters), preventing environment drift between development and testing.
+  
+
+\subsection{Automated Prediction and Extraction}
+The evaluation pipeline follows a three-step automated process:
+\begin{enumerate}
+    \item \textbf{Inference:} The system feeds diverse test cases into the model within the Docker environment.
+    \item \textbf{Extraction:} A custom script parses the raw model output to strip away prompt templates and isolate the specific generated response.
+    \item \textbf{Case-Based Analysis:} The extracted predictions are compared against ground-truth labels for different categories (e.g., code generation, logic reasoning, and general instruction).
+\end{enumerate}
+
+\subsection{Performance Metrics}
+The model's performance in the sandbox is evaluated based on Correctness of outputs across different input scenarios.
+ 
