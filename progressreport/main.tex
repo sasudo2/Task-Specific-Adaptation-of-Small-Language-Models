@@ -1,0 +1,105 @@
+\documentclass{thapathaliece}
+
+% --- FONT CONFIGURATION ---
+% Explicitly setting the fonts to match common IOE requirements
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath} % Standard Times font for engineering
+
+% --- PROJECT DATA ---
+\newcommand{\cProjectTitle}{FINE-TUNING OF LLAMA-2 7B FOR PYTHON CODE GENERATION}
+\newcommand{\cProjectType}{A Project Proposal}
+\newcommand{\cSupervisor}{[Supervisor Name]} 
+\newcommand{\cDepartment}{Department of Electronics and Computer Engineering}
+\newcommand{\cMonth}{February}
+\newcommand{\cYear}{2026}
+
+\renewcommand{\cSubmittedI}{Deep Shrestha}
+\renewcommand{\cSubmittedIRoll}{THA079BCT011}
+\renewcommand{\cSubmittedII}{Pradip Pokhrel}
+\renewcommand{\cSubmittedIIRoll}{THA079BCT027}
+\renewcommand{\cSubmittedIII}{Rohan Dhakal}
+\renewcommand{\cSubmittedIIIRoll}{THA079BCT033}
+\renewcommand{\cSubmittedIV}{Sanjay Shrestha}
+\renewcommand{\cSubmittedIVRoll}{THA079BCT039}
+
+\makeglossaries
+
+\begin{document}
+
+% 1. TITLE PAGE (No page number)
+\begin{titlepage}
+    \thispagestyle{empty}
+    \begin{center}
+        \includegraphics[width=1.5in]{logo.png}\\[0.4cm]
+        {\large \textbf{TRIBHUVAN UNIVERSITY}}\\[0.1cm]
+        {\large \textbf{INSTITUTE OF ENGINEERING}}\\[0.1cm]
+        {\large \textbf{THAPATHALI CAMPUS}}\\[2cm]
+        
+        {\large \textbf{\cProjectType}}\\[0.1cm]
+        {\large \textbf{ON}}\\[0.1cm]
+        {\large \textbf{\cProjectTitle}}\\[2cm]
+        
+        {\large \textbf{SUBMITTED BY:}}\\[0.4cm]
+        \begin{tabular}{ll}
+            \cSubmittedI & (\cSubmittedIRoll) \\
+            \cSubmittedII & (\cSubmittedIIRoll) \\
+            \cSubmittedIII & (\cSubmittedIIIRoll) \\
+            \cSubmittedIV & (\cSubmittedIVRoll) \\
+        \end{tabular}\\[2cm]
+        
+        {\large \textbf{SUBMITTED TO:}}\\[0.1cm]
+        {\cDepartment}\\[0.1cm]
+        {Thapathali Campus, Kathmandu, Nepal}\\[2cm]
+        
+        {\cMonth, \cYear}
+    \end{center}
+\end{titlepage}
+
+% 2. FRONT MATTER (Roman numerals start here)
+\cleardoublepage
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+% Use \phantomsection and \addcontentsline to ensure TOC links work with hyperref
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{ACKNOWLEDGEMENT}
+\include{acknowledgement}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{ABSTRACT}
+\include{abstract}
+
+% 3. LISTS (TOC, LOF, LOT)
+% Note: The .cls file usually formats these headers automatically
+\tableofcontents
+\newpage
+\listoffigures
+\listoftables
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{LIST OF ABBREVIATIONS}
+\printglossary[type=\acronymtype, title={LIST OF ABBREVIATIONS}]
+
+% 4. MAIN MATTER (Arabic numerals start at Introduction)
+\newpage
+\pagenumbering{arabic}
+\include{introduction}
+\include{litrature}
+\include{theoretical-background}
+\include{methodology}
+\include{Final_outcome}
+\include{schedule}
+\include{feasibility}
+
+% 5. BACK MATTER
+\nocite{*}
+\bibliographystyle{ieeetr}
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{REFERENCES}
+\bibliography{references} 
+
+\end{document}

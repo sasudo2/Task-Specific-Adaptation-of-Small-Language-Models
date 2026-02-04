@@ -1,0 +1,12 @@
+\chapter*{ABSTRACT}
+\onehalfspacing % Ensures consistent spacing as per campus standards
+Fine-tuning large language models requires intensive hardware resources, making full fine-tuning infeasible to train under low-resource constraints. Although some large language models perform better in Python code generation, they are not feasible for training on custom datasets. Addressing this gap requires efficient fine-tuning that reduces memory and computation overhead. 
+
+This project aims to fine-tune Llama-2 7B for Python code generation by Parameter Efficient Fine-Tuning (PEFT) with QLoRA, focusing on hardware-level constraints. The training dataset is constructed from multiple open-source repositories, including FlyTec, StaQC, and Alpaca 18k. Preprocessing involves filtering non-Python samples, cleaning noisy code, and formatting the data into instruction–response pairs suitable for supervised fine-tuning. 
+
+
+
+The fine-tuned model will be evaluated on unseen Python problems. Performance will be compared with the base model Llama-2 7B to assess the improvement achieved through fine-tuning. The fine-tuned model is expected to be capable of generating Python code solutions for common coding exercises, using a mixture of common programming problems and LeetCode problems as a benchmark on low-edge devices.
+
+\vspace{1cm}
+\noindent \textbf{Keywords:} PEFT, QLoRA, LoRA, OPT, Hugging Face.
