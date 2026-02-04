@@ -19,7 +19,7 @@ Figure~\ref{fig:finalmodel} shows the final model after fine-tuning where Figure
     \label{fig:decoder}
 \end{figure}
 
-The final model is a Decoder-only Transformer architecture enhanced with QLoRA for memory-efficient fine-tuning. The process begins with raw text being converted into Input Embeddings and combined with Positional Encoding to help the model understand the order of words. This combined vector enters a stack of 31 identical Decoder Layers. Each layer follows a specific sequence: the data is first normalized via RMSNorm before entering the Self-Attention block, where the model weighs the importance of different words in the context. Crucially, the QLoRA Adapter  is injected here, allowing the model to learn task-specific updates through small, trainable matrices while keeping the massive original weights frozen and quantized.After the attention phase, the signal is normalized again and passed into the FFN, which also features a QLoRA adapter injection to refine the model's high-level reasoning. These "adapter" paths are added back to the main data flow using residual connections, ensuring the model retains its base knowledge while incorporating new fine-tuned patterns. Once the data exits the final decoder layer, it passes through a Linear layer to project it back into the vocabulary size and a Softmax function to produce Probabilities. These probabilities represent the model's prediction for the most likely next word in the sequence, which is then fed back into the system to generate text auto-regressively.
+The final model is a Decoder-only autoregressive Transformer architecture enhanced with QLoRA for memory-efficient fine-tuning. The process begins with raw text being converted into Input Embeddings and combined with Positional Encoding to help the model understand the order of words. This combined vector enters a stack of 31 identical Decoder Layers. Each layer follows a specific sequence: the data is first normalized via RMSNorm before entering the Self-Attention block, where the model weighs the importance of different words in the context. Crucially, the QLoRA Adapter  is injected here, allowing the model to learn task-specific updates through small, trainable matrices while keeping the massive original weights frozen and quantized.After the attention phase, the signal is normalized again and passed into the FFN, which also features a QLoRA adapter injection to refine the model's high-level reasoning. These "adapter" paths are added back to the main data flow using residual connections, ensuring the model retains its base knowledge while incorporating new fine-tuned patterns. Once the data exits the final decoder layer, it passes through a Linear layer to project it back into the vocabulary size and a Softmax function to produce Probabilities. These probabilities represent the model's prediction for the most likely next word in the sequence, which is then fed back into the system to generate text auto-regressively.
 
 \vspace{18pt}
 % ---------------------------------------------------------
@@ -27,7 +27,7 @@ The final model is a Decoder-only Transformer architecture enhanced with QLoRA f
 
 Fine-tuning Llama-2 7B for Python code generation requires a high-quality, domain-specific dataset 
 containing diverse programming tasks and their corresponding solutions. 
-We will construct a composite dataset from multiple reputable open-source sources.
+We constructed a composite dataset from multiple reputable open-source sources.
 \end{normaltext}
 \subsection{Dataset Sources and Composition}
 \begin{normaltext}
@@ -43,8 +43,10 @@ We will construct a composite dataset from multiple reputable open-source source
         \hline
         Python Code Instructions 18k (Alpaca-style) & $\sim$18,000 pairs & Instruction prompts and Python responses. Matches instruction-tuning structure; provides human-readable prompts and increases prompt diversity. & CC BY-NC 4.0 \\
         \hline
-        LeetCode Programming Problems (Evaluation Only) & $\sim$200--300 problems & Problem descriptions and reference solutions. Provides competitive programming tasks and enables functional correctness testing. & Fair use \\
+        LeetCode Programming Problems & $\sim$ problems & Problem descriptions and reference solutions. Provides competitive programming tasks and enables functional correctness testing. & Fair use \\
         \hline
+        \hline
+
     \end{tabularx}
     
     \label{tbl:datasets}
