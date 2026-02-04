@@ -1,0 +1,24 @@
+\chapter{REMAINING TASKS}
+
+\section{Final Model Training on Colab Pro}
+The most critical remaining task is the fine-tuning of the Llama 2 7B model. 
+\begin{itemize}
+    \item \textbf{A100 GPU Utilization:} Due to the memory requirements of training on the full merged dataset, an NVIDIA A100 (40GB) in Colab Pro will be used.
+    \item \textbf{Complete Dataset Run:} Training will proceed using the full integrated dataset (TACO, Alpaca-18k, Flytech) to ensure the model captures the nuances of all domains.
+    \item \textbf{Checkpointing:} Implementing a robust checkpointing strategy to save model states at regular intervals to prevent data loss.
+\end{itemize}
+
+\section{Sandbox Evaluation and Inference}
+A containerized sandbox will be used to host the model for final testing.
+\begin{itemize}
+    \item \textbf{Inference Testing:} Running the fine-tuned model against a diverse set of prompts in a Docker environment to measure response.
+    \item \textbf{Qualitative Analysis:} The evaluation will focus on the model's ability to follow specific formatting requirements from the dataset that the base model may struggle with.
+\end{itemize}
+
+\section{Algorithmic Evaluation using CodeBLEU}
+To provide a scientific basis for the model's coding capabilities, the project will implement CodeBLEU metrics.
+\begin{itemize}
+    \item \textbf{Syntactic and Semantic Analysis:} Evaluating generated code not just on word overlap but on Abstract Syntax Tree (AST) and data-flow similarity.
+    \item \textbf{Benchmarking:} Comparing the CodeBLEU scores of our model against the base model to quantify the gains achieved through the TACO dataset.
+\end{itemize}
+
