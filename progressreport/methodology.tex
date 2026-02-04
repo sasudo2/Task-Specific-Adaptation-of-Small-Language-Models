@@ -1,103 +1,43 @@
-\chapter{METHODOLOGY}
-This project aims to fine-tune the Llama-2 7B large language model for Python code generation. The methodology is structured into three distinct phases: dataset preparation, model fine-tuning, and performance evaluation.
+\chapter{Methodology}
 
-Figure~\ref{fig:finalmodel} illustrates the system block diagram, while Figure~\ref{fig:decoder} provides a detailed view of the decoder block with the integrated QLoRA adapter.
+This project focuses on fine-tuning the Llama-2 7B large language model for Python code generation. The overall methodology is divided into three main stages: dataset preparation, model fine-tuning, and evaluation. First, suitable programming datasets are collected and processed. Then, the pretrained Llama-2 model is fine-tuned using the QLoRA technique to reduce memory usage. Finally, the trained model is evaluated using functional and automatic metrics to measure its performance.
 
+\section{Dataset Collection}
 
+High-quality and domain-specific data is required to fine-tune the model for Python code generation. Therefore, a composite dataset is created using multiple open-source sources such as the FlyTech Python dataset, Alpaca-style instruction datasets, and standardized problems from platforms like LeetCode and TACO Python datasets. These datasets contain programming instructions and corresponding Python solutions, which help the model learn diverse coding patterns.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.65\linewidth]{model.jpg}
-    \caption{System Block Diagram}
-    \label{fig:finalmodel}
-\end{figure}
+\section{Dataset Preparation}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\linewidth]{decoder.jpg}
-    \caption{Decoder Block Diagram with QLoRA Adapter}
-    \label{fig:decoder}
-\end{figure}
+The collected data is processed to improve quality and consistency. Duplicate samples are removed to reduce redundancy. Incomplete or syntactically incorrect programs are filtered using automated checks. Additionally, code formatting is standardized to maintain uniform indentation and structure.
 
-The architecture follows a decoder-only Transformer design. Input text is converted into embeddings and combined with positional encodings before entering a stack of 32 decoder layers (for Llama-2 7B). Within each layer, data passes through RMSNorm and a multi-head self-attention mechanism. Crucially, the QLoRA adapters are injected into the linear projections of the attention and Feed-Forward Network (FFN) blocks. This allows for task-specific parameter updates while keeping the base model's 4-bit quantized weights frozen.
+\section{Train, Validation, and Test Split}
 
-\section{Dataset Description and Preparation}
-Fine-tuning for Python code generation requires a high-quality dataset containing diverse programming tasks. We construct a composite dataset from multiple open-source repositories.
+The processed dataset is divided into three parts after shuffling to ensure effective training and evaluation. About 80\% of the data is used for training, which allows the model to learn programming patterns. Ten percent is reserved for validation to monitor overfitting and tune hyperparameters. The remaining ten percent is used for final evaluation. This separation ensures unbiased performance assessment.
 
-\subsection{Dataset Sources and Composition}
-\begin{table}[H]
-    \centering
-    \caption{Dataset Sources and Composition}
-    \begin{tabularx}{\textwidth}{|>{\bfseries}l|X|X|l|}
-        \hline
-        \textbf{Dataset} & \textbf{Size} & \textbf{Content \& Reason} & \textbf{License} \\ \hline
-        FlyTech Python & $\sim$42,000 pairs & Python scripts with structured tasks and docstrings. & MIT \\ \hline
-        Alpaca-18k & $\sim$18,000 pairs & Instruction prompts for prompt diversity. & CC BY-NC \\ \hline
-        LeetCode & 200--300 & Competitive tasks for functional testing. & Fair use \\ \hline
-    \end{tabularx}
-    \label{tbl:datasets}
-\end{table}
+\section{Instruction Formatting and Tokenization}
 
-\subsection{Dataset Processing Pipeline}
-The collected data undergoes a rigorous preprocessing pipeline:
-\begin{itemize}
-    \item \textbf{Duplicate Removal:} Eliminating identical instruction–code pairs to prevent overfitting.
-    \item \textbf{Syntactic Filtering:} Discarding incomplete or syntactically incorrect Python code using AST parsing.
-    \item \textbf{Chain-of-Thought (CoT) Enrichment:} Adding step-by-step reasoning to help the model learn logical structure.
-    \item \textbf{Normalization:} Standardizing indentation (PEP 8) and naming conventions.
-\end{itemize}
-
-
-
-\begin{table}[H]
-    \centering
-    \caption{Final Expected Dataset Size}
-    \begin{tabular}{l r}
-        \textbf{Source} & \textbf{Count} \\ \hline
-        FlyTech & $\sim$40,000 \\
-        Alpaca & $\sim$17,000 \\ \hline
-        \textbf{Total Usable Examples} & \textbf{$\sim$57,000} \\
-    \end{tabular}
-\end{table}
-
-\subsection{Instruction Formatting and Tokenization}
-Each example is formatted into an instruction-style structure. For example:
-\begin{quote}
-\texttt{Instruction:} Write a Python code for printing whether a given number is Armstrong.\\
-\texttt{Chain of thought:} [Logical steps...]\\
-\texttt{Response:} [Python Code Block]
-\end{quote}
+Each dataset sample is converted into an instruction-based format that includes three components: the system prompt, the problem statement, and the final Python code. This structure helps the model understand how to reason before generating solutions. After formatting, all samples are tokenized using the Llama tokenizer. This ensures compatibility with the pretrained Llama-2 model and prevents token mismatch issues during training.
 
 \section{Model Fine-Tuning}
-The model utilizes the instruction-tuning paradigm. Given a prompt $x$, the model predicts the target token sequence $y$ by maximizing the likelihood:
-\begin{equation}\label{eq:loss}
-\mathcal{L} = -\sum_{t=1}^{T} \log P_{\theta} (y_{t} \mid y_{<t}, x)
-\end{equation}
 
-\subsection{QLoRA for Efficient Training}
-QLoRA achieves efficiency by freezing the 4-bit quantized base weights and optimizing only the low-rank adapter matrices. This reduces the VRAM requirement to approximately 16GB, fitting within the constraints of an NVIDIA RTX 3060 or Google Colab T4.
+The Llama-2 7B model is fine-tuned using the instruction-tuning approach. Given an input instruction, the model learns to predict the next token in the output sequence. Training aims to minimize the negative log-likelihood loss between predicted and actual tokens. Model parameters are updated using gradient descent. By learning step-by-step problem-solving patterns, the model becomes more accurate and reliable in generating correct Python code.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{flowdiagram.png} 
-    \caption{Base Model Fine-tuning with QLoRA Adapter Layers}
-    \label{fig:qlora_flow}
-\end{figure}
+\section{QLoRA-Based Efficient Training}
 
-\section{Evaluation Metrics}
-Evaluation is split into functional correctness and similarity-based metrics.
+To reduce memory consumption, QLoRA is used for fine-tuning. In this approach, the original model weights remain frozen and are loaded in 4-bit quantized form. Small trainable low-rank adapter matrices are inserted into the transformer layers. Only these adapters are updated during training. This method significantly reduces computational and memory requirements, making it possible to train the model on limited hardware such as Google Colab.
 
-\subsection{Functional Correctness}
-Generated solutions are executed in a secure Docker sandbox and classified as:
-\begin{itemize}
-    \item \textbf{Right:} Passes all test cases.
-    \item \textbf{Partial:} Passes some test cases.
-    \item \textbf{Wrong:} Fails output or crashes.
-\end{itemize}
+\section{Training Setup}
 
-\subsection{Automatic Similarity Metrics}
-We utilize BLEU and CodeBLEU for quantitative assessment. CodeBLEU integrates structural information via Abstract Syntax Trees (AST) and data-flow:
-\begin{equation}
-\text{CodeBLEU} = \alpha \cdot \text{BLEU} + \beta \cdot \text{AST} + \gamma \cdot \text{DFScore} + \delta \cdot \text{SemanticScore}
-\end{equation}
-where $\alpha, \beta, \gamma, \delta$ are weighted parameters.
+Training is conducted on Google Colab using the AdamW optimizer. Important hyperparameters such as learning rate, batch size, and LoRA rank are selected based on validation loss. Dropout is applied to adapter layers for regularization, and early stopping is used to prevent overfitting. When training cannot be completed in a single session, checkpoints are saved and resumed across multiple sessions to ensure continuity.
+
+\section{Monitoring and Checkpointing}
+
+The training process is continuously monitored using Weights and Biases (WandB), which tracks loss values, evaluation metrics, and system resource usage. Regular checkpoints are saved locally and on Google Drive to prevent data loss. To ensure reproducibility, fixed random seeds are used across all experiments.
+
+\section{Evaluation}
+
+The performance of the fine-tuned model is evaluated using both functional and similarity-based methods. In functional evaluation, generated Python programs are executed in a secure Docker environment. Outputs are classified as correct, partially correct, or incorrect based on test cases. This directly measures the model’s real-world problem-solving ability.
+
+In addition, automatic metrics such as BLEU and CodeBLEU are used to compare generated code with reference solutions. BLEU measures n-gram similarity, while CodeBLEU also considers syntax, data flow, and semantic correctness. These metrics provide quantitative support to functional evaluation.
+
+By combining execution-based testing with similarity metrics, the evaluation ensures that the generated code is syntactically valid, logically correct, and semantically meaningful.
