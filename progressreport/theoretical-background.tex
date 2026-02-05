@@ -11,6 +11,14 @@ and are optimized for both research and practical applications. Due to their ope
 availability and strong performance, LLaMA-2 models are widely used for tasks such as
 text generation, question answering, summarization, and code generation.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{model.jpg}
+    \caption{LLaMA}
+    \label{fig:llama}
+\end{figure}
+
+
 \subsection{LLaMA Architecture Variation}
 LLaMA-2 is built upon the transformer-based architecture, which utilizes
 self-attention mechanisms to effectively capture long-range dependencies
@@ -21,14 +29,6 @@ ensure efficient gradient flow, residual connections and layer normalization
 are employed throughout the network. This architectural design allows for
 highly parallel computation and scalability, making LLaMA-2 suitable for
 training large-scale language models with billions of parameters. 
-
-% --- FIGURE 1: GENERIC TRANSFORMER ARCHITECTURE ---
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.7\textwidth]{transformer-arch.png}
-    \caption{Transformer Architecture}
-    \label{fig:transformer_architecture}
-\end{figure}
 
 
 
@@ -69,6 +69,15 @@ each decoder layer processes input tokens sequentially while attending to all
 previous tokens through a masked self-attention mechanism. This causal masking
 ensures that the prediction of a token depends only on preceding context, making
 the model suitable for text and code generation tasks.
+
+% --- FIGURE 1: GENERIC TRANSFORMER ARCHITECTURE ---
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\textwidth]{transformer-arch.png}
+    \caption{Transformer Architecture}
+    \label{fig:transformer_architecture}
+\end{figure}
+
 
 Each decoder layer consists of a multi-head self-attention module followed by a
 position-wise feed-forward network. The multi-head attention mechanism enables
@@ -332,11 +341,18 @@ By implementing pre-normalization with RMSNorm, LLaMA-2 ensures more robust grad
 \section{Fine-Tuning}
 Fine-tuning is the process of adapting a pre-trained language model (PLM) to a specific downstream task or domain by continuing the training process on a smaller, task-specific dataset. This approach leverages the broad linguistic and factual knowledge acquired during the pre-training phase, significantly reducing the computational resources and data volume required to achieve high performance on specialized tasks.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{flowdiagram.png}
+    \caption{Flow diagram of the fine-tuning process}
+    \label{fig:Fine-tuning_flow}
+\end{figure}
 
 
 \subsection{Mathematical Formulation of Fine-Tuning}
 Consider a pre-trained model with parameters $\theta \in \mathbb{R}^d$, initially trained on a large-scale general corpus $\mathcal{D}_{\text{pretrain}}$. The model defines a conditional probability distribution over token sequences:
 \begin{equation}
+
 P_\theta(y \mid x)
 \end{equation}
 where $x$ represents the input sequence and $y$ represents the target sequence.
@@ -357,6 +373,13 @@ where $\eta$ represents the learning rate. This optimization shifts the model's 
 
 \section{Quantized Low-Rank Adaptation (QLoRA)}
 Quantized Low-Rank Adaptation (QLoRA) is a parameter-efficient fine-tuning (PEFT) technique that integrates high-precision low-rank adaptation with a quantized, frozen language model. This method significantly reduces the memory footprint required to fine-tune large models like LLaMA-2, making it feasible to perform optimization on consumer-grade hardware without substantial loss in model performance.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{with_qlora.png}
+    \caption{Llama model with QLoRA}
+    \label{fig:Llama_with_QLoRA}
+\end{figure}
 
 \subsection{Mathematical Formulation}
 The efficiency of QLoRA is derived from two primary mechanisms: weight quantization and the addition of trainable low-rank adapters.

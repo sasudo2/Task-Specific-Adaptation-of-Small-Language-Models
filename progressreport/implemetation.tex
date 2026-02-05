@@ -1,0 +1,128 @@
+\chapter{Implementation Details}
+
+\section{Overview}
+This project aims to fine-tune the Llama-2 7B large language model for Python code generation. 
+The methodology is structured in three phases: dataset preparation, fine-tuning, and evaluation. 
+
+\section{Data Collection and Preparation}
+Fine-tuning Llama-2 7B for Python code generation requires a high-quality, domain-specific dataset 
+containing diverse programming tasks and their corresponding solutions. 
+We constructed a composite dataset from multiple reputable open-source sources.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Data-flow.png}
+    \caption{Data Flow Diagram}
+    \label{fig:Data Flow Diagram}
+\end{figure}
+
+
+\subsection{Dataset Sources}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|p{5cm}|p{2cm}|p{6cm}|p{2cm}|}
+\hline
+\textbf{Dataset} & \textbf{Size} & \textbf{Description} & \textbf{License} \\
+\hline
+FlyTech Python Code Dataset (2025) & $\sim$42,000 pairs & Python scripts with comments, docstrings, and structured tasks. Curated for code generation with high-quality, well-commented code and diverse algorithmic/real-world examples. & MIT License \\
+\hline
+Python Code Instructions 18k (Alpaca-style) & $\sim$18,000 pairs & Instruction prompts and Python responses. Matches instruction-tuning structure; provides human-readable prompts and increases prompt diversity. & CC BY-NC 4.0 \\
+\hline
+LeetCode Dataset (theabbie) & $\sim$2318 files & Contains code and the file name corresponds to the title of the problem. Useful for algorithmic reasoning, competitive programming, and code generation tasks. & Public / Kaggle \\
+\hline
+LeetCode Problem Dataset (gzipchrist) & $\sim$1825 problems & Detailed problem descriptions, difficulty levels, tags, and more. Focuses on classic data structures and algorithms, suitable for training and evaluating code understanding models. & Public / Kaggle \\
+\hline
+TACO (Tasks for Code Generation) Dataset & $\sim$26,000 tasks & Natural language programming tasks paired with executable Python solutions. Covers real-world logic, algorithmic problems, and structured coding instructions. & Apache 2.0 \\
+\hline
+\end{tabular}
+\caption{Datasets used for fine-tuning Llama-2 7B for Python code generation.}
+\end{table}
+
+\subsection{Preparation}
+\textbf{Alpaca:} We used \texttt{qwen2.5-coder:1.5b} to identify whether the given rows were competitive programming (C.P.) problems. Approximately 12,000 problems were identified by the model, and we manually removed rows that were misclassified. The final dataset contained 11,926 rows of Python code with descriptions.  
+
+\textbf{FlyTech:} Among 42000 rows of python code, we filtered out samples that were duplicate or had missing or empty problem descriptions. After cleaning 22,000 samples, we retained 9616 high-quality samples.
+
+\textbf{TACO:} We cleaned the datasets by removing samples with missing code solutions or incomplete problem statements. After cleaning, we retained 20493 high-quality samples.
+
+\textbf{LeetCode Problems:} We compared the titles from the theabbie and gzipchrist datasets. A total of 1,204 matching problems were found. The first 175 problems were reserved for future Chain-of-Thought (CoT) tasks, leaving 1,029 rows for fine-tuning.
+
+\subsection{Dataset Merging and Filtering}
+All collected datasets were merged, resulting in a combined corpus of approximately 43,066 samples. The merged data were first filtered based on code length and repetition ratio to ensure quality and diversity:
+\begin{itemize}
+    \item Samples with code length greater than 7 tokens were retained.
+    \item Samples with repetition ratio lower than 0.6 were retained.
+\end{itemize}
+
+After filtering, 39,823 samples remained. 
+
+\subsection{Semantic Clustering and Sampling}
+To further enhance dataset diversity, semantic clustering-based sampling was applied:
+\begin{enumerate}
+    \item Sentence embeddings were generated from the instruction text using the \texttt{all-MiniLM-L6-v2} transformer model.
+    \item Embeddings were clustered into 20,000 clusters using MiniBatch K-Means.
+    \item Clusters containing at least one row (effective clusters) numbered 18,526.
+    \item For each cluster, the sample closest to the centroid was selected, producing a curated and semantically diverse final dataset.
+\end{enumerate}
+
+Among these, 1,860 rows were reserved for testing, and the remaining samples were used for fine-tuning and validation.
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{final_datasets.png}
+    \caption{final datasets}
+    \label{fig:Final datasets for fine tuning}
+\end{figure}
+
+\section{Hyperparameter Optimization Strategy}
+
+Fine-tuning large language models involves several sensitive hyperparameters that significantly influence convergence behavior and final model performance. Exhaustive grid search becomes computationally infeasible due to the high dimensionality of the hyperparameter space and the cost of training large models. Therefore, a \textbf{random search strategy} was adopted for hyperparameter optimization.
+
+\subsection{Random Search Motivation}
+
+Random search samples hyperparameter configurations from predefined distributions instead of evaluating all possible combinations. Prior work has shown that random search is often more efficient than grid search when only a subset of hyperparameters strongly influences performance. This approach allows effective exploration of the search space within limited computational budgets.
+
+In the context of parameter-efficient fine-tuning using LoRA, multiple hyperparameters interact non-linearly, including learning rate, batch size, adapter rank, and scaling factors. Random search enables simultaneous optimization of these parameters and captures their interactions without requiring an exhaustive search.
+
+\subsection{Search Space Definition}
+
+The following hyperparameters were included in the random search space:
+
+\begin{itemize}
+    \item \textbf{Learning Rate} ($\eta$): Controls the step size of gradient updates.
+    \item \textbf{Per-device Train Batch Size}: Determines the number of samples processed per forward pass.
+    \item \textbf{Warmup Steps}: Number of steps used for learning rate warmup.
+    \item \textbf{LoRA Rank ($r$)}: Controls the low-rank approximation capacity of the adapter layers.
+    \item \textbf{LoRA Scaling Factor ($\alpha$)}: Scales the LoRA updates relative to the frozen weights.
+    \item \textbf{Target Modules}: Attention projection layers where LoRA adapters are injected.
+\end{itemize}
+
+All hyperparameter configurations were evaluated using the same quantized base model and dataset split to ensure fair comparison.
+
+\subsection{Best Hyperparameter Configuration}
+
+After evaluating multiple random configurations, the following hyperparameter setting achieved the best validation performance:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ll}
+\hline
+\textbf{Hyperparameter} & \textbf{Selected Value} \\
+\hline
+Learning Rate & $2.65 \times 10^{-4}$ \\
+Per-device Train Batch Size & 3 \\
+Warmup Steps & 4 \\
+LoRA Rank ($r$) & 32 \\
+LoRA Alpha ($\alpha$) & 64 \\
+Target Modules & \texttt{q\_proj, v\_proj} \\
+\hline
+\end{tabular}
+\caption{Best hyperparameter configuration obtained through random search}
+\end{table}
+
+\subsection{Discussion}
+
+The selected configuration reflects a balance between optimization stability and adapter capacity. The moderately high learning rate combined with a small batch size allows efficient learning under quantized training constraints. A LoRA rank of 32 with a scaling factor of 64 provides sufficient representational power while maintaining parameter efficiency. Restricting LoRA adapters to the query and value projection layers further reduces computational overhead while preserving model expressiveness.
+
+Overall, the random search strategy enabled effective joint optimization of interacting hyperparameters and produced a well-performing configuration within a limited number of trials.
