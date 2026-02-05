@@ -25,3 +25,6 @@
 *.pdf
 *.csv
 .env
+.drive
+outputs
+wandb
