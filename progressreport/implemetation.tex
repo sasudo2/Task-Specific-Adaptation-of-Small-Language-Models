@@ -121,6 +121,23 @@ Target Modules & \texttt{q\_proj, v\_proj, k\_proj} \\
 \caption{Best hyperparameter configuration obtained through random search}
 \end{table}
 
+\subsection{Fine-tuning with Selected Hyperparameters}
+The selected hyperparameters were used to fine-tune the Llama-2 7B model on the curated dataset. The training process was monitored using validation loss and perplexity score to ensure convergence and prevent overfitting. The LoRA adapters were injected into the specified attention projection layers, allowing efficient parameter updates while keeping the majority of the model weights frozen. The model was finetuned in a quantized 4-bit format to further reduce memory usage and computational requirements, enabling training on limited hardware resources. The fine-tuning was doen on A100 GPU with 40GB VRAM available on Google Colab Pro.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{gpu_usage.png}
+    \caption{GPU Memory Usage During Fine-tuning}
+    \label{fig:GPU Usage}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{train_loss_vs_eval_loss.png}
+    \caption{Training Loss vs Evaluation Loss}
+    \label{fig:Train Loss vs Eval Loss}
+\end{figure}
+
 \subsection{Discussion}
 
 The selected configuration reflects a balance between optimization stability and adapter capacity. The moderately high learning rate combined with a small batch size allows efficient learning under quantized training constraints. A LoRA rank of 32 with a scaling factor of 64 provides sufficient representational power while maintaining parameter efficiency. Restricting LoRA adapters to the query and value projection layers further reduces computational overhead while preserving model expressiveness.
