@@ -351,10 +351,11 @@ Fine-tuning is the process of adapting a pre-trained language model (PLM) to a s
 
 \subsection{Mathematical Formulation of Fine-Tuning}
 Consider a pre-trained model with parameters $\theta \in \mathbb{R}^d$, initially trained on a large-scale general corpus $\mathcal{D}_{\text{pretrain}}$. The model defines a conditional probability distribution over token sequences:
-\begin{equation}
 
-P_\theta(y \mid x)
-\end{equation}
+$$
+P_\theta (y \mid x)
+$$
+
 where $x$ represents the input sequence and $y$ represents the target sequence.
 
 For a specific downstream task characterized by a dataset $\mathcal{D}_{\text{task}} = \{(x_i, y_i)\}_{i=1}^N$, the fine-tuning process adjusts the parameters $\theta$ to minimize a task-specific loss function $\mathcal{L}(\theta)$. This is typically achieved using the cross-entropy loss:

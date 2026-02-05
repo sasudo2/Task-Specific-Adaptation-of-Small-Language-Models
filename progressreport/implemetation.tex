@@ -9,11 +9,11 @@ Fine-tuning Llama-2 7B for Python code generation requires a high-quality, domai
 containing diverse programming tasks and their corresponding solutions. 
 We constructed a composite dataset from multiple reputable open-source sources.
 
-\begin{figure}[ht]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.5\textwidth]{Data-flow.png}
-    \caption{Data Flow Diagram}
-    \label{fig:Data Flow Diagram}
+    \includegraphics[width=0.8\textwidth]{Data-flow.png}
+    \caption{Data Preparation Flow Diagram}
+    \label{fig:Data Preparation Flow Diagram}
 \end{figure}
 
 
@@ -68,9 +68,9 @@ To further enhance dataset diversity, semantic clustering-based sampling was app
 Among these, 1,860 rows were reserved for testing, and the remaining samples were used for fine-tuning and validation.
 
 
-\begin{figure}[ht]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.5\textwidth]{final_datasets.png}
+    \includegraphics[width=\textwidth]{final_datasets.png}
     \caption{final datasets}
     \label{fig:Final datasets for fine tuning}
 \end{figure}
@@ -110,12 +110,12 @@ After evaluating multiple random configurations, the following hyperparameter se
 \hline
 \textbf{Hyperparameter} & \textbf{Selected Value} \\
 \hline
-Learning Rate & $2.65 \times 10^{-4}$ \\
-Per-device Train Batch Size & 3 \\
+Learning Rate & $6.49 \times 10^{-4}$ \\
+Per-device Train Batch Size & 5 \\
 Warmup Steps & 4 \\
-LoRA Rank ($r$) & 32 \\
-LoRA Alpha ($\alpha$) & 64 \\
-Target Modules & \texttt{q\_proj, v\_proj} \\
+LoRA Rank ($r$) & 64 \\
+LoRA Alpha ($\alpha$) & 32 \\
+Target Modules & \texttt{q\_proj, v\_proj, k\_proj} \\
 \hline
 \end{tabular}
 \caption{Best hyperparameter configuration obtained through random search}
