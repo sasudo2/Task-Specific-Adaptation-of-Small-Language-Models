@@ -1,0 +1,558 @@
+% --- THEORETICAL BACKGROUND CHAPTER ---
+
+\chapter{THEORETICAL BACKGROUND}
+
+\section{What is LLaMA-2?}
+LLaMA-2 (Large Language Model Meta AI) is a family of large-scale transformer-based
+language models developed by Meta. It is designed to generate human-like text by
+learning statistical patterns from large corpora of textual data. LLaMA-2 models are
+available in different parameter sizes, ranging from 7 billion to 70 billion parameters,
+and are optimized for both research and practical applications. Due to their open
+availability and strong performance, LLaMA-2 models are widely used for tasks such as
+text generation, question answering, summarization, and code generation.
+
+\subsection{LLaMA Architecture Variation}
+LLaMA-2 is built upon the transformer-based architecture, which utilizes
+self-attention mechanisms to effectively capture long-range dependencies
+within sequential data. The model is composed of multiple stacked decoder
+layers, where each layer integrates a self-attention module followed by a
+position-wise feed-forward neural network. To enhance training stability and
+ensure efficient gradient flow, residual connections and layer normalization
+are employed throughout the network. This architectural design allows for
+highly parallel computation and scalability, making LLaMA-2 suitable for
+training large-scale language models with billions of parameters. 
+
+% --- FIGURE 1: GENERIC TRANSFORMER ARCHITECTURE ---
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{transformer-arch.png}
+    \caption{Transformer Architecture}
+    \label{fig:transformer_architecture}
+\end{figure}
+
+
+
+\begin{table}[h]
+\centering
+\caption{Architectural Variants of LLaMA-2 Models}
+\label{tab:llama2_variants}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Model Size} & \textbf{Parameter Size} & \textbf{Training Tokens} & \textbf{Attention Heads} & \textbf{Layers} \\
+\hline
+LLaMA-2 7B  & 7 Billion  & $\sim$2 Trillion & 32 & 32 \\
+LLaMA-2 13B & 13 Billion & $\sim$2 Trillion & 40 & 40 \\
+LLaMA-2 70B & 70 Billion & $\sim$2 Trillion & 64 & 80 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Context Length of LLaMA-2 Models}
+    \label{tab:llama2_context}
+    \begin{tabular}{lc}
+        \toprule
+        \textbf{Model Size} & \textbf{Context Length (Tokens)} \\
+        \midrule
+        LLaMA-2 7B  & 4096 \\
+        LLaMA-2 13B & 4096 \\
+        LLaMA-2 70B & 4096 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Transformer Architecture Analysis}
+The LLaMA-2 model adopts a decoder-only transformer architecture, which is
+specifically designed for autoregressive language modeling. In this architecture,
+each decoder layer processes input tokens sequentially while attending to all
+previous tokens through a masked self-attention mechanism. This causal masking
+ensures that the prediction of a token depends only on preceding context, making
+the model suitable for text and code generation tasks.
+
+Each decoder layer consists of a multi-head self-attention module followed by a
+position-wise feed-forward network. The multi-head attention mechanism enables
+the model to capture diverse linguistic and semantic relationships by attending
+to information from multiple representation subspaces. Residual connections and
+layer normalization are incorporated to stabilize training, improve convergence,
+and facilitate efficient gradient propagation across deep network layers.
+
+In summary, LLaMA-2 employs a \textit{decoder-only transformer architecture with
+masked multi-head self-attention, residual connections, and layer normalization},
+making it well-suited for large-scale language modeling and generative tasks.
+
+\subsection{Pre-training of LLaMA-2}
+The pre-training of LLaMA-2 is conducted on a large-scale corpus composed of a
+new mixture of data collected exclusively from publicly available sources.
+The training corpus consists of approximately two trillion tokens, representing a
+carefully selected performance–cost trade-off. To improve factual accuracy and
+reduce hallucinations, more reliable and knowledge-dense sources were
+up-sampled during training.
+
+Pre-training follows an autoregressive language modeling objective, where the
+model learns to predict the next token given all preceding tokens in a sequence.
+This objective aligns with the decoder-only transformer architecture and enables
+the model to acquire strong generative capabilities. Extensive data analysis was
+performed during pre-training to better understand the strengths and
+limitations of the resulting models, as reported in the LLaMA-2 evaluation
+studies.
+
+\subsubsection{Training Configuration}
+LLaMA-2 largely adopts the pre-training setup and architectural design of LLaMA-1,
+while introducing several key improvements. The model
+uses a standard transformer architecture with
+pre-normalization implemented via RMSNorm. The SwiGLU
+activation function is employed within feed-forward layers,
+and rotary positional embeddings (RoPE) are used to encode
+positional information.The primary architectural enhancements over LLaMA-1 include an increased context
+length of 4096 tokens.
+
+\subsection{Input Sequence Representation}
+The LLaMA-2 7B Chat model utilizes a specific structured input format to distinguish between system-level instructions, user prompts, and model responses. This structure is essential for maintaining the conversational context and safety constraints during inference. 
+
+The general input sequence $\mathbf{X}$ is represented as:
+
+\begin{equation}
+\mathbf{X} = \langle s \rangle \; [\text{INST}] \; \ll \text{SYS} \gg \, S \, \ll / \text{SYS} \gg \, I \; [/\text{INST}] \; R \; \langle /s \rangle
+\end{equation}
+
+Where the components are defined as follows:
+\begin{itemize}
+    \item $\langle s \rangle$: The Start-of-Sequence (BOS) token.
+    \item $[\text{INST}]$: Special tag indicating the beginning of a user instruction.
+    \item $\ll \text{SYS} \gg S \ll / \text{SYS} \gg$: The system prompt $S$, which defines the model's persona or operational constraints.
+    \item $I$: The specific instruction or query provided by the user.
+    \item $[/\text{INST}]$: Special tag indicating the end of the instruction block.
+    \item $R$: The response or target output generated by the model.
+    \item $\langle /s \rangle$: The End-of-Sequence (EOS) token.
+\end{itemize}
+
+\subsubsection{Practical Example of Sequence Construction}
+
+To demonstrate the application of the LLaMA-2 chat template, consider a scenario involving a system prompt $S$, a user instruction $I$, and the resulting model response $R$.
+
+Let:
+\begin{itemize}
+    \item $S = \text{"You are a Python code assistant."}$
+    \item $I = \text{"Write a function to compute factorial."}$
+    \item $R = \text{"def factorial(n): \ldots"}$
+\end{itemize}
+
+The complete input sequence $\mathbf{X}$ is constructed by concatenating these components within the specialized control tokens as shown in Equation \ref{eq:llama_example}.
+
+\begin{equation}
+\label{eq:llama_example}
+\begin{aligned}
+\mathbf{X} = \langle s \rangle & \; [\text{INST}] \; \ll \text{SYS} \gg \text{You are a Python code assistant.} \ll / \text{SYS} \gg \\
+& \text{Write a function to compute factorial.} \; [/ \text{INST}] \\
+& \text{```def factorial(n): ...```} \; \langle /s \rangle
+\end{aligned}
+\end{equation}
+
+
+\subsection{Tokenizer and Vocabulary}
+LLaMA-2 utilizes a tokenizer based on Byte Pair Encoding (BPE), implemented via the SentencePiece library. This is the same tokenizer configuration used in LLaMA-1. The tokenizer is designed to handle numerical values by splitting them into individual digits and decomposing unknown UTF-8 characters into byte-level representations to ensure full coverage. The resulting vocabulary consists of 32,000 unique tokens.
+
+\subsubsection{Byte Pair Encoding (BPE) Mechanism}
+To illustrate the BPE algorithm, consider a simplified corpus containing the words: \textit{low}, \textit{lower}, \textit{newest}, and \textit{widest}. The algorithm iteratively merges the most frequent adjacent pairs of characters or subwords to form new tokens.
+
+
+
+The step-by-step merging process for this corpus is detailed in Table \ref{tab:bpe_example}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Step-by-step BPE token merges}
+    \label{tab:bpe_example}
+    \begin{tabular}{ccl}
+        \toprule
+        \textbf{Step} & \textbf{Symbol Pairs Merged} & \textbf{Resulting Token Sequence} \\
+        \midrule
+        0 & - & l o w, l o w e r, n e w e s t, w i d e s t \\
+        1 & e s & l o w, l o w e r, n e \textbf{es} t, w i d e \textbf{es} t \\
+        2 & es t & l o w, l o w e r, n e \textbf{est}, w i d e \textbf{est} \\
+        3 & l o & \textbf{lo} w, \textbf{lo} w e r, n e est, w i d e est \\
+        4 & w e & lo \textbf{we} r, n e est, w i d e est \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+After several iterations, frequently occurring subword units such as \textit{lo}, \textit{we}, and \textit{est} are merged. This results in a subword vocabulary that can efficiently represent all words in the corpus, including rare or unseen words, by breaking them down into known sub-components. This approach significantly reduces the "Out-of-Vocabulary" (OOV) problem common in natural language processing.
+
+% --- FIGURE 2: FIRST STEP OF NLP IN TRANSFORMER ---
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{first-step.png}
+    \caption{First Step of NLP in Transformer}
+    \label{fig:First_Step}
+\end{figure}
+
+\subsection{Rotary Positional Embeddings (RoPE)}
+Rotary Positional Embeddings (RoPE) is a technique utilized to encode positional information in transformer-based models like LLaMA-2. Unlike traditional positional encodings that are additively combined with token embeddings, RoPE applies a geometric rotation to the query and key vectors based on their absolute positions in the sequence. 
+
+This mechanism leverages complex numbers, where the rotation is represented by cosine and sine functions. RoPE is particularly effective because it allows the attention mechanism to capture relative positional relationships implicitly, enabling the model to generalize to sequence lengths exceeding the context window used during training.
+
+\subsubsection{Mathematical Formulation}
+Let $\mathbf{q}, \mathbf{k} \in \mathbb{R}^d$ denote the query and key vectors of a transformer attention layer, and let $p$ be the token position. RoPE partitions the hidden dimensions into pairs and applies a rotation to each pair $(q_{2i-1}, q_{2i})$ and $(k_{2i-1}, k_{2i})$ using the following transformation:
+
+
+
+\begin{equation}
+\begin{bmatrix}
+q'_{2i-1} \\
+q'_{2i}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(p\theta_i) & -\sin(p\theta_i) \\
+\sin(p\theta_i) & \cos(p\theta_i)
+\end{bmatrix}
+\begin{bmatrix}
+q_{2i-1} \\
+q_{2i}
+\end{bmatrix}
+\end{equation}
+
+Similarly, the keys are rotated as:
+
+\begin{equation}
+\begin{bmatrix}
+k'_{2i-1} \\
+k'_{2i}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\cos(p\theta_i) & -\sin(p\theta_i) \\
+\sin(p\theta_i) & \cos(p\theta_i)
+\end{bmatrix}
+\begin{bmatrix}
+k_{2i-1} \\
+k_{2i}
+\end{bmatrix}
+\end{equation}
+
+In these equations, $\theta_i$ represents the precomputed frequency for the $i$-th dimension pair, defined as:
+
+\begin{equation}
+\theta_i = 10000^{-2(i-1)/d}
+\end{equation}
+
+Following the rotation, the transformed query matrix $\mathbf{Q}'$ and key matrix $\mathbf{K}'$ are used to compute the scaled dot-product attention:
+
+\begin{equation}
+\text{Attention}(\mathbf{Q}', \mathbf{K}', \mathbf{V}) = \text{softmax}\left(\frac{\mathbf{Q}' (\mathbf{K}')^\top}{\sqrt{d_k}}\right) \mathbf{V}
+\end{equation}
+
+This rotation allows the attention mechanism to *implicitly encode relative positions* between tokens, improving the model's ability to generalize to sequences longer than those seen during training.
+
+\subsection{Multi-Head Attention (MHA)}
+Multi-Head Attention is a fundamental mechanism in the transformer architecture, utilized specifically in the LLaMA-2 7B and 13B variants. MHA enables the model to jointly attend to information from different representation subspaces at different positions, which is critical for capturing complex semantic relationships between tokens.
+
+
+
+Given input embeddings $\mathbf{X} \in \mathbb{R}^{n \times d}$, where $n$ is the sequence length and $d$ is the hidden dimension, the mechanism first projects the input into query, key, and value matrices:
+
+\begin{equation}
+\mathbf{Q} = \mathbf{X} W^Q, \quad \mathbf{K} = \mathbf{X} W^K, \quad \mathbf{V} = \mathbf{X} W^V
+\end{equation}
+
+where $W^Q, W^K, W^V \in \mathbb{R}^{d \times d_k}$ are learned weight matrices, and $d_k = d/h$ represents the dimension of each of the $h$ attention heads.
+
+% --- FIGURE 3: SCALED DOT PRODUCT ATTENTION ---
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Dot-product-attention.png}
+    \caption{Scaled Dot-Product Attention Mechanism}
+    \label{fig:scaled_attention_dot_product}
+\end{figure}
+
+
+For each individual head $i = 1, \dots, h$, the scaled dot-product attention is computed as:
+
+\begin{equation}
+\text{head}_i = \text{Attention}(\mathbf{Q}_i, \mathbf{K}_i, \mathbf{V}_i) = \text{softmax}\left(\frac{\mathbf{Q}_i \mathbf{K}_i^\top}{\sqrt{d_k}}\right) \mathbf{V}_i
+\end{equation}
+
+The outputs from all heads are then concatenated and linearly transformed using a learned output projection matrix $W^O \in \mathbb{R}^{d \times d}$:
+
+\begin{equation}
+\text{MultiHead}(\mathbf{Q}, \mathbf{K}, \mathbf{V}) = \text{Concat}(\text{head}_1, \dots, \text{head}_h) W^O
+\end{equation}
+
+This parallel processing allows the model to capture various linguistic features, such as syntactic dependencies and contextual nuances, more effectively than a single-head attention mechanism.
+
+\subsection{Activation Function (SwiGLU)}
+LLaMA-2 utilizes the SwiGLU activation function, a variant of the Gated Linear Unit (GLU) that has been shown to improve model expressivity and training stability compared to traditional ReLU activations \cite{shazeer2020glu}. This activation is integrated within the feed-forward network (FFN) of each transformer decoder layer.
+
+For an input vector $\mathbf{x} \in \mathbb{R}^d$, the SwiGLU mechanism first computes two distinct linear projections:
+
+\begin{equation}
+\mathbf{a} = \mathbf{x} W_1, \quad \mathbf{b} = \mathbf{x} W_2
+\end{equation}
+
+where $W_1, W_2 \in \mathbb{R}^{d \times d_{ff}}$ are learned weight matrices, and $d_{ff}$ denotes the intermediate hidden dimension of the feed-forward layer. 
+
+
+
+The output of the SwiGLU layer is then determined by the element-wise multiplication of the first projection with the gated second projection:
+
+\begin{equation}
+\text{SwiGLU}(\mathbf{x}) = \mathbf{a} \odot \text{SiLU}(\mathbf{b})
+\end{equation}
+
+where $\odot$ denotes the Hadamard (element-wise) product. The SiLU (Sigmoid Linear Unit) function, also known as the swish activation, is defined as:
+
+\begin{equation}
+\text{SiLU}(z) = z \cdot \sigma(z) = \frac{z}{1 + e^{-z}}
+\end{equation}
+
+By gating the linear transformation $\mathbf{a}$ with the non-linear SiLU output of $\mathbf{b}$, SwiGLU allows the network to model complex patterns more effectively through controlled information flow.
+
+\subsection{RMSNorm}
+RMSNorm (Root Mean Square Layer Normalization) is a normalization technique utilized in LLaMA-2 to stabilize the training process and accelerate convergence \cite{zhang2019rmsnorm}. Unlike standard Layer Normalization, RMSNorm achieves re-scaling invariance by focusing on the root mean square of the activations without subtracting the mean. This simplification reduces computational overhead while maintaining similar performance benefits.
+
+
+
+For an input vector $\mathbf{x} \in \mathbb{R}^d$, the RMSNorm mechanism first calculates the root-mean-square of the elements as shown in Equation \ref{eq:rms_calc}:
+
+\begin{equation}
+\label{eq:rms_calc}
+\text{RMS}(\mathbf{x}) = \sqrt{\frac{1}{d} \sum_{i=1}^{d} x_i^2}
+\end{equation}
+
+The normalized output vector is then derived by scaling the input by the inverse of its RMS value and applying a learned gain parameter $g \in \mathbb{R}^d$:
+
+\begin{equation}
+\text{RMSNorm}(\mathbf{x}) = \frac{\mathbf{x}}{\text{RMS}(\mathbf{x})} \cdot g
+\end{equation}
+
+By implementing pre-normalization with RMSNorm, LLaMA-2 ensures more robust gradient flow and improved training stability across very deep network architectures, while remaining computationally more efficient than traditional LayerNorm methods.
+
+
+\section{Fine-Tuning}
+Fine-tuning is the process of adapting a pre-trained language model (PLM) to a specific downstream task or domain by continuing the training process on a smaller, task-specific dataset. This approach leverages the broad linguistic and factual knowledge acquired during the pre-training phase, significantly reducing the computational resources and data volume required to achieve high performance on specialized tasks.
+
+
+
+\subsection{Mathematical Formulation of Fine-Tuning}
+Consider a pre-trained model with parameters $\theta \in \mathbb{R}^d$, initially trained on a large-scale general corpus $\mathcal{D}_{\text{pretrain}}$. The model defines a conditional probability distribution over token sequences:
+\begin{equation}
+P_\theta(y \mid x)
+\end{equation}
+where $x$ represents the input sequence and $y$ represents the target sequence.
+
+For a specific downstream task characterized by a dataset $\mathcal{D}_{\text{task}} = \{(x_i, y_i)\}_{i=1}^N$, the fine-tuning process adjusts the parameters $\theta$ to minimize a task-specific loss function $\mathcal{L}(\theta)$. This is typically achieved using the cross-entropy loss:
+
+\begin{equation}
+\mathcal{L}(\theta) = - \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T_i} \log P_\theta(y_{i,t} \mid y_{i,<t}, x_i)
+\end{equation}
+
+In this formulation, $y_{i,t}$ denotes the $t$-th token of the target sequence $y_i$, while $y_{i,<t}$ represents all tokens preceding position $t$, and $T_i$ is the total sequence length. The model parameters are iteratively updated using a gradient-based optimization algorithm:
+
+\begin{equation}
+\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}(\theta)
+\end{equation}
+
+where $\eta$ represents the learning rate. This optimization shifts the model's weight distribution to better align with the statistical properties and requirements of the target domain while retaining the foundational representations learned during pre-training.
+
+\section{Quantized Low-Rank Adaptation (QLoRA)}
+Quantized Low-Rank Adaptation (QLoRA) is a parameter-efficient fine-tuning (PEFT) technique that integrates high-precision low-rank adaptation with a quantized, frozen language model. This method significantly reduces the memory footprint required to fine-tune large models like LLaMA-2, making it feasible to perform optimization on consumer-grade hardware without substantial loss in model performance.
+
+\subsection{Mathematical Formulation}
+The efficiency of QLoRA is derived from two primary mechanisms: weight quantization and the addition of trainable low-rank adapters.
+
+\subsubsection{Weight Quantization}
+Let $\mathbf{W} \in \mathbb{R}^{d \times k}$ represent the pre-trained weight matrix of a transformer layer. In the QLoRA framework, the full-precision weights are quantized into a low-bit representation, typically using 4-bit NormalFloat (NF4), to minimize VRAM consumption:
+
+
+
+\begin{equation}
+\mathbf{W}_q = Q(\mathbf{W}) \approx \mathbf{W}
+\end{equation}
+
+In this expression, $Q(\cdot)$ denotes the quantization function that maps high-precision (32-bit or 16-bit) weights into a 4-bit integer space. This process reduces the storage requirements for the backbone weights by approximately 8 times, allowing the model to remain resident in memory during the fine-tuning of the adapter layers.
+
+\subsubsection{Low-Rank Adaptation (LoRA)}
+Instead of updating the entire quantized matrix $\mathbf{W}_q$, which remains frozen, LoRA introduces trainable low-rank matrices $\mathbf{A} \in \mathbb{R}^{d \times r}$ and $\mathbf{B} \in \mathbb{R}^{r \times k}$ where the rank $r \ll \min(d,k)$. The adapted weight matrix is expressed as:
+
+\begin{equation}
+\mathbf{W}_{\text{adapted}} = \mathbf{W}_q + \Delta \mathbf{W}, \quad \Delta \mathbf{W} = \mathbf{A} \mathbf{B}
+\end{equation}
+
+Here, $\Delta \mathbf{W}$ captures task-specific updates in a low-dimensional subspace. Only $\mathbf{A}$ and $\mathbf{B}$ are trained, while $\mathbf{W}_q$ remains frozen.
+
+\subsubsection{Forward Pass with QLoRA}
+During the forward pass, the adapted weight is used in the standard linear layer to compute the output $\mathbf{y}$ for a given input $\mathbf{x}$:
+
+\begin{equation}
+\mathbf{y} = (\text{dequant}(\mathbf{W}_q) + \mathbf{A}\mathbf{B}) \mathbf{x} + \mathbf{b}
+\end{equation}
+
+where $\mathbf{b} \in \mathbb{R}^d$ represents the bias term. By combining these methods, QLoRA enables high-fidelity fine-tuning with significantly lower computational costs.
+
+\subsection{Training Efficiency}
+The training efficiency of QLoRA is characterized by the following factors:
+\begin{itemize}
+    \item \textbf{Memory Reduction:} Primary weights $\mathbf{W}_q$ are stored in 4-bit, while only small adapter matrices are stored in full precision.
+    \item \textbf{Lower Computational Cost:} Since the rank $r$ is much smaller than $d$ or $k$, the number of trainable parameters is reduced by orders of magnitude.
+    \item \textbf{Hardware Accessibility:} Fine-tuning of large-scale models becomes feasible on single GPUs with limited VRAM.
+\end{itemize}
+
+In summary, the governing formulation for QLoRA-based fine-tuning used in this study is:
+
+\begin{equation}
+\label{eq:qlora_final}
+\boxed{\mathbf{W}_{\text{QLoRA}} = Q(\mathbf{W}) + \mathbf{A}\mathbf{B}}
+\end{equation}
+
+\section{Code Generation with LLMs}
+Large Language Models (LLMs) such as LLaMA-2 have demonstrated robust capabilities in automatic code generation. These models learn programming syntax, semantics, and structural patterns from large-scale code datasets. This enables them to generate source code from natural language instructions, perform code completion, and assist in automated debugging.
+
+\subsection{Mathematical Perspective of Code Generation}
+From a computational standpoint, code generation is treated as a conditional sequence generation problem. The process is decomposed into tokenization and autoregressive inference.
+
+\subsubsection{Tokenization}
+The natural language instruction is first processed using a tokenizer, such as Byte-Pair Encoding (BPE), which maps the input string to a sequence of discrete tokens:
+
+\begin{equation}
+\mathbf{x} = [x_1, x_2, \dots, x_n], \quad x_i \in V
+\end{equation}
+
+where $V$ represents the model's vocabulary. For example, the instruction \textit{"Write a Python function"} is transformed into a numerical vector:
+\begin{equation}
+\text{"Write a Python function"} \longrightarrow [101, 523, 324, 76, 981]
+\end{equation}
+
+\subsubsection{Autoregressive Generation}
+The model generates code tokens sequentially using an autoregressive approach. The probability of predicting the next token $x_{t+1}$ is conditioned on all previously generated tokens:
+
+
+
+\begin{equation}
+P(x_{t+1} \mid x_1, x_2, \dots, x_t) = \text{softmax}\left(\frac{\mathbf{Q}_t \mathbf{K}_t^\top}{\sqrt{d_k}} \right) \mathbf{V}_t
+\end{equation}
+
+In this formulation:
+\begin{itemize}
+    \item $\mathbf{Q}_t, \mathbf{K}_t, \mathbf{V}_t$ are the query, key, and value matrices computed within the transformer's self-attention layers at time step $t$.
+    \item $x_{t+1}$ is the token with the highest predicted probability (or sampled) based on the preceding context $[x_1, \dots, x_t]$.
+\end{itemize}
+
+\subsubsection{Sequence Formation}
+Following the prediction of $x_{t+1}$, the token is appended to the existing sequence, and the process repeats:
+\begin{equation}
+\mathbf{x} \leftarrow [x_1, x_2, \dots, x_t, x_{t+1}]
+\end{equation}
+
+This iterative generation continues until the model produces a specialized end-of-sequence (EOS) token, signifying the completion of the code snippet.
+
+\subsubsection{Practical Generation Example}
+To illustrate the autoregressive process, consider a specific user instruction $I$ and the corresponding model output $R$.
+
+\textbf{Input Instruction:}  
+\textit{"Write a Python function to compute factorial"}
+
+\textbf{Tokenized Input:}  
+\begin{equation}
+[x_1, x_2, x_3, x_4, x_5] = [101, 523, 324, 76, 981]
+\end{equation}
+
+\textbf{Step-by-step Token Generation:}  
+The iterative prediction of subsequent tokens is represented in the following sequence:
+
+\begin{equation}
+\begin{aligned}
+x_6 &\sim P(x_6 \mid x_1, \dots, x_5) \longrightarrow \texttt{def} \\
+x_7 &\sim P(x_7 \mid x_1, \dots, x_6) \longrightarrow \texttt{factorial} \\
+x_8 &\sim P(x_8 \mid x_1, \dots, x_7) \longrightarrow \texttt{(n):} \\
+x_9 &\sim P(x_9 \mid x_1, \dots, x_8) \longrightarrow \texttt{if} \\
+& \vdots \\
+x_{15} &\sim P(x_{15} \mid x_1, \dots, x_{14}) \longrightarrow \texttt{return n*factorial(n-1)}
+\end{aligned}
+\end{equation}
+
+\textbf{Generated Code Output:}
+
+
+
+\begin{small}
+\begin{verbatim}
+def factorial(n):
+    if n == 0 or n == 1:
+        return 1
+    else:
+        return n * factorial(n-1)
+\end{verbatim}
+\end{small}
+
+\subsection{BLEU Score}
+
+BLEU evaluates token-level n-gram overlap between generated and reference code \cite{Papineni2002}. 
+The BLEU score is computed using Equation~\eqref{eq:bleu}:
+
+\begin{equation}\label{eq:bleu}
+	\text{BLEU} = \text{BP} \cdot \exp\left(\sum_{n=1}^{N} w_n \log p_n\right)
+\end{equation}
+
+where $p_n$ is the n-gram precision, $w_n$ are uniform weights (typically $w_n = 1/N$), and BP is the brevity penalty. 
+BP is calculated using Equation~\eqref{eq:bleu_bp}:
+
+\begin{equation}\label{eq:bleu_bp}
+	\text{BP} =
+	\begin{cases} 
+	1 & \text{if } c > r \\
+	e^{(1-r/c)} & \text{if } c \leq r
+	\end{cases}
+\end{equation}
+
+The n-gram precision $p_n$ uses clipped counts to avoid rewarding repeated tokens:
+
+\begin{equation}\label{eq:pn}
+p_{n}=
+\frac{
+\sum_{\text{candidate sentences}}
+\sum_{\text{n-gram} \in \text{candidate}}
+\text{Count}_{\text{clip}}(\text{n-gram})
+}{
+\sum_{\text{candidate sentences}}
+\sum_{\text{n-gram} \in \text{candidate}}
+\text{Count}(\text{n-gram})
+}
+\end{equation}
+
+where $c$ and $r$ are as defined in Equation~\eqref{eq:bleu_bp}.
+
+---
+
+\subsection{CodeBLEU}
+
+CodeBLEU extends BLEU for code generation by incorporating syntax, data-flow, and semantic correctness \cite{Brown2020}. 
+It is defined as shown in Equation~\eqref{eq:codebleu}:
+
+\begin{equation}\label{eq:codebleu}
+\text{CodeBLEU} =
+\alpha \cdot \text{BLEU}
++ \beta \cdot \text{AST}
++ \gamma \cdot \text{DFScore}
++ \delta \cdot \text{SemanticScore}
+\end{equation}
+
+where $\alpha$, $\beta$, $\gamma$, and $\delta$ are weighting parameters that control the contribution of each component.
+
+The individual components are computed as follows:
+
+\begin{equation}\label{eq:ast}
+\text{AST} =
+\frac{\text{matching\_subtrees}}{\text{total\_subtrees}}
+\end{equation}
+
+\begin{equation}\label{eq:dfscore}
+\text{DFScore} =
+\frac{\text{matching\_dataflow\_edges}}{\text{total\_dataflow\_edges}}
+\end{equation}
+
+\begin{equation}\label{eq:semantic}
+\text{SemanticScore} =
+\frac{\text{matching\_semantic\_tokens}}{\text{total\_semantic\_tokens}}
+\end{equation}
+

@@ -1,0 +1,75 @@
+\chapter{REQUIREMENTS ANALYSIS}
+
+\section{Dataset Requirements}
+The model is trained on a merged dataset comprising three primary sources, cleaned and formatted into a unified structure (Instruction, Input, Output).
+
+\begin{itemize}
+    \item \textbf{TACO :} Focused on code-related instructions and programming tasks.
+    \item \textbf{Alpaca-18k:} A cleaned version of the general-purpose instruction-following dataset.
+    \item \textbf{Flytech:} Specialized technical or domain-specific data.
+\end{itemize}
+
+\subsection{Data Processing}
+\begin{itemize}
+    \item \textbf{Merging:} All datasets are merged into a single training file.
+    \item \textbf{Cleaning:} Deduplication, removal of null entries, and prompt template standardization.
+    \item \textbf{Subsampling:} A random 5\% subset is extracted specifically for the hyperparameter tuning phase.
+\end{itemize}
+
+\section{Hardware and Infrastructure Requirements}
+Due to the computational demands of Llama 2 7B, the project utilizes a hybrid infrastructure approach:
+
+\begin{table}[h]
+    \centering
+    \caption{Infrastructure Allocation}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Task} & \textbf{Platform} & \textbf{Resources} \\ \hline
+        Data Preparation & Kaggle / Colab Free & CPU / T4 GPU \\ \hline
+        Hyperparameter Tuning & Colab Pro & A100 / V100 GPU (High-RAM) \\ \hline
+        Final Fine-tuning & Colab Pro & A100 / V100 GPU (High-RAM) \\ \hline
+    \end{tabular}
+\end{table}
+
+\section{Software Requirements}
+The project implementation relies on the following Python libraries:
+\begin{itemize}
+    \item \textbf{PEFT:} For implementing QLoRA adapters.
+    \item \textbf{BitsAndBytes:} For 4-bit model quantization.
+    \item \textbf{Transformers/TRL:} For the SFTTrainer and model loading.
+    \item \textbf{Datasets:} For efficient data loading and processing.
+\end{itemize}
+
+\section{Quantization Configuration}
+To maintain efficiency on Colab Pro, QLoRA is implemented with:
+\begin{itemize}
+    \item 4-bit NormalFloat (nf4) quantization.
+    \item Double quantization to reduce memory overhead further.
+    \item LoRA rank ($r$) of 8 or 16.
+\end{itemize}
+
+\section{Training Process}
+\subsection{Hyperparameter Tuning}
+Hyperparameter tuning is performed on 5\% of the merged dataset. This phase identifies the optimal learning rate, weight decay, and batch size to ensure stability during the full training run.
+
+\subsection{Full Fine-tuning}
+Once optimal parameters are identified, the full dataset is utilized for final fine-tuning. This stage requires the High-RAM and high-tier GPU capabilities of \textbf{Colab Pro} to avoid Out-of-Memory (OOM) errors during the weight merging and checkpointing stages.
+
+\section{Sandbox Evaluation Environment}
+To ensure the reliability and performance of the fine-tuned Llama 2 7B model, a dedicated evaluation sandbox was developed using containerization.
+
+\subsection{Dockerized Environment}
+A Docker container was created to provide a consistent, isolated, and reproducible environment for model inference. The container encapsulates all dependencies (Transformers, BitsAndBytes, and PEFT adapters), preventing environment drift between development and testing.
+  
+
+\subsection{Automated Prediction and Extraction}
+The evaluation pipeline follows a three-step automated process:
+\begin{enumerate}
+    \item \textbf{Inference:} The system feeds diverse test cases into the model within the Docker environment.
+    \item \textbf{Extraction:} A custom script parses the raw model output to strip away prompt templates and isolate the specific generated response.
+    \item \textbf{Case-Based Analysis:} The extracted predictions are compared against ground-truth labels for different categories (e.g., code generation, logic reasoning, and general instruction).
+\end{enumerate}
+
+\subsection{Performance Metrics}
+The model's performance in the sandbox is evaluated based on Correctness of outputs across different input scenarios.
+ 

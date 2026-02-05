@@ -1,0 +1,15 @@
+\chapter{EXPECTED OUTCOMES}
+
+The primary outcome of this project is a specialized Llama-2 7B model capable of generating high-quality Python code from textual prompts. Unlike the base model, the fine-tuned version is expected to internalize the underlying logical patterns of the provided datasets rather than just memorizing facts. Specifically, the model will learn the \textit{procedural reasoning} required to solve a problem rather than just the final output.
+
+
+
+The fine-tuned model is expected to achieve the following:
+\begin{itemize}
+    \item \textbf{Improved Accuracy:} Achieve significantly higher performance benchmarks on unseen programming problems compared to the base Llama-2 7B model.
+    \item \textbf{Syntactic and Logical Integrity:} Produce code that is not only syntactically correct but also logically sound, following the reasoning chains integrated during training.
+    \item \textbf{Enhanced Readability:} Focus on human-centric code by automatically generating descriptive comments and docstrings.
+    \item \textbf{Resource Efficiency:} Remain fully functional on low-specification consumer devices (under 16GB VRAM) without sacrificing generation quality.
+\end{itemize}
+
+Ultimately, the goal is to bridge the gap between large-scale proprietary models and local development environments, providing a functional, deployable system that can be used for real-world software development tasks and educational tutoring.
