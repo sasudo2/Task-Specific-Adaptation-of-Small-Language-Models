@@ -1,6 +1,12 @@
-\chapter{Methodology}
+\chapter{METHODOLOGY}
 
 This project focuses on fine-tuning the Llama-2 7B large language model for Python code generation. The overall methodology is divided into three main stages: dataset preparation, model fine-tuning, and evaluation. First, suitable programming datasets are collected and processed. Then, the pretrained Llama-2 model is fine-tuned using the QLoRA technique to reduce memory usage. Finally, the trained model is evaluated using functional and automatic metrics to measure its performance.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\textwidth]{methodology.png}
+    \caption{Methodology}
+    \label{fig:Methodology of the project}
+\end{figure}
 
 \section{Dataset Collection}
 
@@ -41,3 +47,47 @@ The performance of the fine-tuned model is evaluated using both functional and s
 In addition, automatic metrics such as BLEU and CodeBLEU are used to compare generated code with reference solutions. BLEU measures n-gram similarity, while CodeBLEU also considers syntax, data flow, and semantic correctness. These metrics provide quantitative support to functional evaluation.
 
 By combining execution-based testing with similarity metrics, the evaluation ensures that the generated code is syntactically valid, logically correct, and semantically meaningful.
+
+\section{Dataset Collection}
+
+High-quality and domain-specific data is required to fine-tune the model for Python code generation. Therefore, a composite dataset is created using multiple open-source sources such as the FlyTech Python dataset, Alpaca-style instruction datasets, and standardized problems from platforms like LeetCode and TACO Python datasets. These datasets contain programming instructions and corresponding Python solutions, which help the model learn diverse coding patterns.
+
+\section{Dataset Preparation}
+
+The collected data is processed to improve quality and consistency. Duplicate samples are removed to reduce redundancy. Incomplete or syntactically incorrect programs are filtered using automated checks. Additionally, code formatting is standardized to maintain uniform indentation and structure.
+
+\section{Train, Validation, and Test Split}
+
+The processed dataset is divided into three parts after shuffling to ensure effective training and evaluation. About 80\% of the data is used for training, which allows the model to learn programming patterns. Ten percent is reserved for validation to monitor overfitting and tune hyperparameters. The remaining ten percent is used for final evaluation. This separation ensures unbiased performance assessment.
+
+\section{Instruction Formatting and Tokenization}
+
+Each dataset sample is converted into an instruction-based format that includes three components: the system prompt, the problem statement, and the final Python code. This structure helps the model understand how to reason before generating solutions. After formatting, all samples are tokenized using the Llama tokenizer. This ensures compatibility with the pretrained Llama-2 model and prevents token mismatch issues during training.
+
+\section{Model Fine-Tuning}  
+The Llama-2 7B model is fine-tuned using the instruction-tuning approach. Given an input instruction, the model learns to predict the next token in the output sequence. Training aims to minimize the negative log-likelihood loss between predicted and actual tokens. Model parameters are updated using gradient descent. By learning step-by-step problem-solving patterns, the model becomes more accurate and reliable in generating correct Python code.
+
+\section{QLoRA-Based Efficient Training}
+
+To reduce memory consumption, QLoRA is used for fine-tuning. In this approach, the original model weights remain frozen and are loaded in 4-bit quantized form. Small trainable low-rank adapter matrices are inserted into the transformer layers. Only these adapters are updated during training. This method significantly reduces computational and memory requirements, making it possible to train the model on limited hardware such as Google Colab.
+
+
+
+\section{Training Setup}
+
+Training is conducted on Google Colab using the AdamW optimizer. Important hyperparameters such as learning rate, batch size, and LoRA rank are selected based on validation loss. Dropout is applied to adapter layers for regularization, and early stopping is used to prevent overfitting. When training cannot be completed in a single session, checkpoints are saved and resumed across multiple sessions to ensure continuity.
+
+\section{Monitoring and Checkpointing}
+
+The training process is continuously monitored using Weights and Biases (WandB), which tracks loss values, evaluation metrics, and system resource usage. Regular checkpoints are saved locally and on Google Drive to prevent data loss. To ensure reproducibility, fixed random seeds are used across all experiments.
+
+\section{Evaluation}
+
+The performance of the fine-tuned model is evaluated using both functional and similarity-based methods. In functional evaluation, generated Python programs are executed in a secure Docker environment. Outputs are classified as correct, partially correct, or incorrect based on test cases. This directly measures the model’s real-world problem-solving ability.
+
+In addition, automatic metrics such as BLEU and CodeBLEU are used to compare generated code with reference solutions. BLEU measures n-gram similarity, while CodeBLEU also considers syntax, data flow, and semantic correctness. These metrics provide quantitative support to functional evaluation.
+
+
+
+By combining execution-based testing with similarity metrics, the evaluation ensures that the generated code is syntactically valid, logically correct, and semantically meaningful.
+

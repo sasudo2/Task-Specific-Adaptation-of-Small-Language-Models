@@ -14,17 +14,15 @@ In our initial research, we found that generating Python code locally using thes
 The standard Llama-2 7B model suffers from a significant quality gap, frequently producing syntactically incorrect or logically flawed Python code compared to massive proprietary systems \cite{Diehl2024Llama2Benchmark}. Furthermore, resource constraints make full fine-tuning inaccessible, as it exceeds the VRAM capacity of consumer-grade GPUs like the NVIDIA T4 or RTX 3060. It also face persistent logic issues, often guessing code structures and hallucinating during complex programming tasks rather than following a planned approach. 
 
 \section{Objectives}
-The primary objectives of this project are:
+The primary objectives of this project is:
 \begin{itemize}
-    \item To utilize QLoRA for the compression and fine-tuning of the Llama-2 7B model.
-    \item To enable high-quality Python code generation on standard consumer hardware.
-    \item To implement Chain-of-Thought reasoning to improve the logical consistency of generated code.
+    \item To use QLoRA for compression and fine tuning of Llama-2 7B model so that it can run on standard consumer hardware for python code generation.
 \end{itemize}
 
 \section{Scope and Applications}
 This project focuses on specializing the Llama-2 7B model for Python programming, specifically improving its ability to handle complex logic and various libraries. By using 4-bit QLoRA, the training is kept within a strict 16GB VRAM limit, ensuring the system remains compatible with consumer-level hardware and Google Colab.
 
-The model is trained using Chain-of-Thought reasoning traces, dataset either gathered manually or sourced from datasets like Alpaca-18k, to teach it step-by-step problem-solving. Success will be measured by comparing the original and fine-tuned models against a series of Python coding tasks and LeetCode challenges.
+The model is trained using dataset either gathered manually or sourced from datasets like Alpaca-18k, to teach it problem-solving. Success will be measured by comparing the original and fine-tuned models against a series of Python coding tasks and LeetCode challenges.
 
 \section*{Potential Applications}
 This project offers various practical benefits:

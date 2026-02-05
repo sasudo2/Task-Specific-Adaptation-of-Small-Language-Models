@@ -1,0 +1,392 @@
+\glsdefs@newdocentry{bleu}%
+{%
+name={\acronymfont {\glsentryshort {bleu}}},%
+sort={BLEU},%
+type={acronym},%
+first={BLEU},%
+firstplural={BLEUs},%
+text={BLEU},%
+plural={BLEUs},%
+description={Bilingual Evaluation Understanding},%
+descriptionplural={Bilingual Evaluation Understanding},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Bilingual Evaluation Understanding},%
+longplural={Bilingual Evaluation Understandings},%
+short={BLEU},%
+shortplural={BLEUs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{cot}%
+{%
+name={\acronymfont {\glsentryshort {cot}}},%
+sort={CoT},%
+type={acronym},%
+first={CoT},%
+firstplural={CoTs},%
+text={CoT},%
+plural={CoTs},%
+description={Chain-of-Thought},%
+descriptionplural={Chain-of-Thought},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Chain-of-Thought},%
+longplural={Chain-of-Thoughts},%
+short={CoT},%
+shortplural={CoTs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{dvc}%
+{%
+name={\acronymfont {\glsentryshort {dvc}}},%
+sort={DVC},%
+type={acronym},%
+first={DVC},%
+firstplural={DVCs},%
+text={DVC},%
+plural={DVCs},%
+description={Data Version Control},%
+descriptionplural={Data Version Control},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Data Version Control},%
+longplural={Data Version Controls},%
+short={DVC},%
+shortplural={DVCs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{gpt}%
+{%
+name={\acronymfont {\glsentryshort {gpt}}},%
+sort={GPT},%
+type={acronym},%
+first={GPT},%
+firstplural={GPTs},%
+text={GPT},%
+plural={GPTs},%
+description={Generative Pre-trained Transformer},%
+descriptionplural={Generative Pre-trained Transformer},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Generative Pre-trained Transformer},%
+longplural={Generative Pre-trained Transformers},%
+short={GPT},%
+shortplural={GPTs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{gpus}%
+{%
+name={\acronymfont {\glsentryshort {gpus}}},%
+sort={GPUs},%
+type={acronym},%
+first={GPUs},%
+firstplural={GPUss},%
+text={GPUs},%
+plural={GPUss},%
+description={Graphics Processing Units},%
+descriptionplural={Graphics Processing Units},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Graphics Processing Units},%
+longplural={Graphics Processing Unitss},%
+short={GPUs},%
+shortplural={GPUss},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{ide}%
+{%
+name={\acronymfont {\glsentryshort {ide}}},%
+sort={IDE},%
+type={acronym},%
+first={IDE},%
+firstplural={IDEs},%
+text={IDE},%
+plural={IDEs},%
+description={Integrated Development Environment},%
+descriptionplural={Integrated Development Environment},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Integrated Development Environment},%
+longplural={Integrated Development Environments},%
+short={IDE},%
+shortplural={IDEs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{llama}%
+{%
+name={\acronymfont {\glsentryshort {llama}}},%
+sort={LLaMA},%
+type={acronym},%
+first={LLaMA},%
+firstplural={LLaMAs},%
+text={LLaMA},%
+plural={LLaMAs},%
+description={Large Language Model Meta AI},%
+descriptionplural={Large Language Model Meta AI},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Large Language Model Meta AI},%
+longplural={Large Language Model Meta AIs},%
+short={LLaMA},%
+shortplural={LLaMAs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{llm}%
+{%
+name={\acronymfont {\glsentryshort {llm}}},%
+sort={LLM},%
+type={acronym},%
+first={LLM},%
+firstplural={LLMs},%
+text={LLM},%
+plural={LLMs},%
+description={Large Language Model},%
+descriptionplural={Large Language Model},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Large Language Model},%
+longplural={Large Language Models},%
+short={LLM},%
+shortplural={LLMs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{lora}%
+{%
+name={\acronymfont {\glsentryshort {lora}}},%
+sort={LoRA},%
+type={acronym},%
+first={LoRA},%
+firstplural={LoRAs},%
+text={LoRA},%
+plural={LoRAs},%
+description={Low-Rank Adaptation},%
+descriptionplural={Low-Rank Adaptation},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Low-Rank Adaptation},%
+longplural={Low-Rank Adaptations},%
+short={LoRA},%
+shortplural={LoRAs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{nf4}%
+{%
+name={\acronymfont {\glsentryshort {nf4}}},%
+sort={NF4},%
+type={acronym},%
+first={NF4},%
+firstplural={NF4s},%
+text={NF4},%
+plural={NF4s},%
+description={4-bit NormalFloat},%
+descriptionplural={4-bit NormalFloat},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={4-bit NormalFloat},%
+longplural={4-bit NormalFloats},%
+short={NF4},%
+shortplural={NF4s},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{opt}%
+{%
+name={\acronymfont {\glsentryshort {opt}}},%
+sort={OPT},%
+type={acronym},%
+first={OPT},%
+firstplural={OPTs},%
+text={OPT},%
+plural={OPTs},%
+description={Open Pre-trained Transformer},%
+descriptionplural={Open Pre-trained Transformer},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Open Pre-trained Transformer},%
+longplural={Open Pre-trained Transformers},%
+short={OPT},%
+shortplural={OPTs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{peft}%
+{%
+name={\acronymfont {\glsentryshort {peft}}},%
+sort={PEFT},%
+type={acronym},%
+first={PEFT},%
+firstplural={PEFTs},%
+text={PEFT},%
+plural={PEFTs},%
+description={Parameter-Efficient Fine-Tuning},%
+descriptionplural={Parameter-Efficient Fine-Tuning},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Parameter-Efficient Fine-Tuning},%
+longplural={Parameter-Efficient Fine-Tunings},%
+short={PEFT},%
+shortplural={PEFTs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{qlora}%
+{%
+name={\acronymfont {\glsentryshort {qlora}}},%
+sort={QLoRA},%
+type={acronym},%
+first={QLoRA},%
+firstplural={QLoRAs},%
+text={QLoRA},%
+plural={QLoRAs},%
+description={Quantized Low-Rank Adaptation},%
+descriptionplural={Quantized Low-Rank Adaptation},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Quantized Low-Rank Adaptation},%
+longplural={Quantized Low-Rank Adaptations},%
+short={QLoRA},%
+shortplural={QLoRAs},%
+counter={page},%
+parent={},%
+%
+}%
+
+\glsdefs@newdocentry{vram}%
+{%
+name={\acronymfont {\glsentryshort {vram}}},%
+sort={VRAM},%
+type={acronym},%
+first={VRAM},%
+firstplural={VRAMs},%
+text={VRAM},%
+plural={VRAMs},%
+description={Video Random Access Memory},%
+descriptionplural={Video Random Access Memory},%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Video Random Access Memory},%
+longplural={Video Random Access Memorys},%
+short={VRAM},%
+shortplural={VRAMs},%
+counter={page},%
+parent={},%
+%
+}%
+

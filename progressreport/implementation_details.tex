@@ -1,0 +1,60 @@
+\chapter{IMPLEMENTATION DETAILS}
+
+\section{Overview}
+This project aims to fine-tune the Llama-2 7B large language model for Python code generation. 
+The methodology is structured in three phases: dataset preparation, fine-tuning, and evaluation. 
+
+\section{Data Collection and Preparation}
+Fine-tuning Llama-2 7B for Python code generation requires a high-quality, domain-specific dataset 
+containing diverse programming tasks and their corresponding solutions. 
+We constructed a composite dataset from multiple reputable open-source sources.
+
+\subsection{Dataset Sources}
+\begin{table}[h!]
+\centering
+\caption{Datasets used for fine-tuning Llama-2 7B for Python code generation.}
+\begin{tabular}{|p{3.5cm}|p{2cm}|p{5cm}|p{2.5cm}|}
+\hline
+\textbf{Dataset} & \textbf{Size} & \textbf{Description} & \textbf{License} \\
+\hline
+FlyTech Python Code Dataset (2025) & $\sim$42,000 pairs & Python scripts with comments, docstrings, and structured tasks. & MIT License \\
+\hline
+Python Code Instructions 18k & $\sim$18,000 pairs & Instruction prompts and Python responses (Alpaca-style). & CC BY-NC 4.0 \\
+\hline
+LeetCode (theabbie) & $\sim$2,318 files & Algorithmic reasoning and competitive programming files. & Public / Kaggle \\
+\hline
+LeetCode (gzipchrist) & $\sim$1,825 tasks & Detailed problem descriptions and difficulty levels. & Public / Kaggle \\
+\hline
+TACO Dataset & $\sim$26,000 tasks & Natural language tasks with executable Python solutions. & Apache 2.0 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Preparation}
+\textbf{Alpaca:} We used \texttt{qwen2.5-coder:1.5b} to identify whether the given rows were competitive programming (C.P.) problems. Approximately 12,000 problems were identified by the model, and we manually removed rows that were misclassified. The final dataset contained 11,926 rows of Python code with descriptions.  
+
+\textbf{FlyTech:} We used [Details pending as per user request].
+
+\textbf{TACO:} We used [Details pending as per user request].
+
+\textbf{LeetCode Problems:} We compared the titles from the theabbie and gzipchrist datasets. A total of 1,204 matching problems were found. The first 175 problems were reserved for future Chain-of-Thought (CoT) tasks, leaving 1,029 rows for fine-tuning.
+
+\subsection{Dataset Merging and Filtering}
+All collected datasets were merged, resulting in a combined corpus of approximately 43,066 samples. The merged data were first filtered based on code length and repetition ratio to ensure quality and diversity:
+\begin{itemize}
+    \item Samples with code length greater than 7 tokens were retained.
+    \item Samples with repetition ratio lower than 0.6 were retained.
+\end{itemize}
+
+After filtering, 39,823 samples remained. 
+
+\subsection{Semantic Clustering and Sampling}
+To further enhance dataset diversity, semantic clustering-based sampling was applied:
+\begin{enumerate}
+    \item Sentence embeddings were generated from the instruction text using the \texttt{all-MiniLM-L6-v2} transformer model.
+    \item Embeddings were clustered into 20,000 clusters using MiniBatch K-Means.
+    \item Clusters containing at least one row (effective clusters) numbered 18,526.
+    \item For each cluster, the sample closest to the centroid was selected, producing a curated and semantically diverse final dataset.
+\end{enumerate}
+
+Among these, 1,860 rows were reserved for testing, and the remaining samples were used for fine-tuning and validation.
