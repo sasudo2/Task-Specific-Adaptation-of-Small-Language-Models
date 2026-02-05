@@ -23,7 +23,7 @@ highly parallel computation and scalability, making LLaMA-2 suitable for
 training large-scale language models with billions of parameters. 
 
 % --- FIGURE 1: GENERIC TRANSFORMER ARCHITECTURE ---
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{transformer-arch.png}
     \caption{Transformer Architecture}
@@ -32,7 +32,7 @@ training large-scale language models with billions of parameters.
 
 
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{Architectural Variants of LLaMA-2 Models}
 \label{tab:llama2_variants}
@@ -180,7 +180,7 @@ The step-by-step merging process for this corpus is detailed in Table \ref{tab:b
 After several iterations, frequently occurring subword units such as \textit{lo}, \textit{we}, and \textit{est} are merged. This results in a subword vocabulary that can efficiently represent all words in the corpus, including rare or unseen words, by breaking them down into known sub-components. This approach significantly reduces the "Out-of-Vocabulary" (OOV) problem common in natural language processing.
 
 % --- FIGURE 2: FIRST STEP OF NLP IN TRANSFORMER ---
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{first-step.png}
     \caption{First Step of NLP in Transformer}
@@ -259,7 +259,7 @@ Given input embeddings $\mathbf{X} \in \mathbb{R}^{n \times d}$, where $n$ is th
 where $W^Q, W^K, W^V \in \mathbb{R}^{d \times d_k}$ are learned weight matrices, and $d_k = d/h$ represents the dimension of each of the $h$ attention heads.
 
 % --- FIGURE 3: SCALED DOT PRODUCT ATTENTION ---
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\textwidth]{Dot-product-attention.png}
     \caption{Scaled Dot-Product Attention Mechanism}

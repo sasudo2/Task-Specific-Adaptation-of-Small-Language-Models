@@ -3,6 +3,9 @@
 % --- FONT CONFIGURATION ---
 % Explicitly setting the fonts to match common IOE requirements
 \usepackage[T1]{fontenc}
+\usepackage{tabularx}
+\usepackage{glossaries}
+\usepackage{bookmark}
 \usepackage{newtxtext,newtxmath} % Standard Times font for engineering
 
 % --- PROJECT DATA ---
@@ -24,6 +27,21 @@
 
 \makeglossaries
 
+\newacronym{bleu}{BLEU}{Bilingual Evaluation Understanding}
+\newacronym{cot}{CoT}{Chain-of-Thought}
+\newacronym{dvc}{DVC}{Data Version Control}
+\newacronym{gpt}{GPT}{Generative Pre-trained Transformer}
+\newacronym{gpus}{GPUs}{Graphics Processing Units}
+\newacronym{ide}{IDE}{Integrated Development Environment}
+\newacronym{llama}{LLaMA}{Large Language Model Meta AI}
+\newacronym{llm}{LLM}{Large Language Model}
+\newacronym{lora}{LoRA}{Low-Rank Adaptation}
+\newacronym{nf4}{NF4}{4-bit NormalFloat}
+\newacronym{opt}{OPT}{Open Pre-trained Transformer}
+\newacronym{peft}{PEFT}{Parameter-Efficient Fine-Tuning}
+\newacronym{qlora}{QLoRA}{Quantized Low-Rank Adaptation}
+\newacronym{vram}{VRAM}{Video Random Access Memory}
+
 \begin{document}
 
 % 1. TITLE PAGE (No page number)
@@ -36,7 +54,7 @@
         {\large \textbf{THAPATHALI CAMPUS}}\\[2cm]
         
         {\large \textbf{\cProjectType}}\\[0.1cm]
-        {\large \textbf{ON}}\\[0.1cm]
+        {\large \textbf{on}}\\[0.1cm]
         {\large \textbf{\cProjectTitle}}\\[2cm]
         
         {\large \textbf{SUBMITTED BY:}}\\[0.4cm]
@@ -73,15 +91,19 @@
 
 % 3. LISTS (TOC, LOF, LOT)
 % Note: The .cls file usually formats these headers automatically
-\tableofcontents
-\newpage
-\listoffigures
-\listoftables
-
 \cleardoublepage
 \phantomsection
-\addcontentsline{toc}{chapter}{LIST OF ABBREVIATIONS}
+\addcontentsline{toc}{chapter}{TABLE OF CONTENTS}
+\tableofcontents
+\renewcommand{\listfigurename}{LIST OF FIGURES}
+\listoffigures
+\renewcommand{\listtablename}{LIST OF TABLES}
+\listoftables
+
+\phantomsection
+\glsaddall
 \printglossary[type=\acronymtype, title={LIST OF ABBREVIATIONS}]
+\addcontentsline{toc}{chapter}{LIST OF ABBREVIATIONS}
 
 % 4. MAIN MATTER (Arabic numerals start at Introduction)
 \newpage
