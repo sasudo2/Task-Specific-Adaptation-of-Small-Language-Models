@@ -14,7 +14,7 @@ def main():
     fn_name = payload["fn_name"]
     test_input = payload["input"]
     time_limit = payload["time_limit_ms"] / 1000
-
+    
     namespace = {}
 
     try:
