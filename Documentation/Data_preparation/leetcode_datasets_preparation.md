@@ -9,6 +9,7 @@ The primary goal of this script is to bridge the gap between a directory of indi
 
 ##  Implementation Details
 
+The orignal dataset consists of a collection of python programs with their file name corresponding to the problem the code is intended to solve. We used 
 ### 1. Text Normalization
 *Example: `1. Two Sum.py` becomes `1-two-sum`*
 
