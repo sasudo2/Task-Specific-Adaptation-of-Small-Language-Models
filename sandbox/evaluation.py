@@ -1,105 +1,126 @@
 import json
 import subprocess
-import requests
-from code_extractor import extract_function
+import os
 
 IMAGE = "python-sandbox"
 
-def generate_code(prompt):
-    response = requests.post('http://localhost:5000/generate', json={'prompt': prompt})
-    return response.json()['code']
 
-def run_in_docker(code, fn_name, test, limits):
+def run_in_docker(code, test_input, limits):
+
+    wrapped_code = f"""
+import sys
+import ast
+
+# -------- USER CODE --------
+{code}
+# ---------------------------
+
+# Find solve() function
+tree = ast.parse(\"\"\"{code}\"\"\")
+has_solve = False
+
+for node in tree.body:
+    if isinstance(node, ast.FunctionDef) and node.name == "solve":
+        has_solve = True
+        break
+
+if not has_solve:
+    print("NO_SOLVE_FUNCTION")
+    exit()
+
+# Read full input as ONE string
+data = sys.stdin.read()
+
+# Call solve(data)
+try:
+    result = solve(data)
+except Exception as e:
+    print("RUNTIME_ERROR:", e)
+    exit()
+
+# Print output
+if result is not None:
+    print(result)
+"""
+
     payload = {
-        "code": code,
-        "fn_name": fn_name,
-        "input": test["input"],
-        "time_limit_ms": limits["time_limit_ms"]
+        "code": wrapped_code,
+        "input": test_input,
+        "time_limit_ms": limits.get("time_limit_ms", 2000)
     }
 
     cmd = [
         "docker", "run", "--rm", "-i",
         "--network", "none",
-        "--memory", f"{limits['memory_limit_kb']}k",
-        "--cpus", "1",
+        "--memory", "256m",
         IMAGE
     ]
 
-    proc = subprocess.run(
-        cmd,
-        input=json.dumps(payload),
-        text=True,
-        capture_output=True,
-        timeout=limits["time_limit_ms"] / 1000 + 2
-    )
-
-    if proc.returncode != 0:
-        print(f"Docker error: {proc.stderr}")
-        return {"status": "docker_error", "error": proc.stderr}
-    
-    if not proc.stdout.strip():
-        print(f"Empty docker output for fn {fn_name}")
-        return {"status": "docker_error", "error": "Empty output"}
-    
-    return json.loads(proc.stdout)
-
-def run_problem(problem):
-    prompt = f"{problem['prompt']}\n{problem['function_signature']}"
-    system_prompt = """You are an expert Python programmer. Your task is to generate correct, efficient Python code.
-    - Write only the function implementation
-    - Do not include markdown code blocks
-    - Do not include explanations
-    - The code must be syntactically correct
-    - There must be proper indentation.
-    - you will be given function signature 
-    - create the program that fits into the function signature.
-    - always enclose code only between ``` and ```.
-    - Do not reason
-    - Do not give any examples
-    """
-    
-    # Combine system prompt with user prompt
-    full_prompt = f"[INST]<<SYS>>{system_prompt}<</SYS>>\n{prompt}[/INST]"
-    
-    model_output = generate_code(full_prompt)
-    
-    # Append generated output to file
-    with open("generated_outputs.txt", "a") as f:
-        f.write(f"\n{'='*80}\n")
-        f.write(f"Problem ID: {problem['id']}\n")
-        f.write(f"{'='*80}\n")
-        f.write(model_output)
-        f.write("\n")
-
-    fn_name = problem["function_signature"].split("(")[0].replace("def ", "").strip()
     try:
-        code = extract_function(model_output, fn_name)
-    except Exception as e:
-        print(f"Extraction error for {fn_name}: {e}")
-        return {"id": problem["id"], "status": "compile_error", "error": str(e)}
-
-    for test in problem["hidden_tests"]:
-        result = run_in_docker(
-            code,
-            fn_name,
-            test,
-            problem
+        proc = subprocess.run(
+            cmd,
+            input=json.dumps(payload),
+            text=True,
+            capture_output=True,
+            timeout=(payload["time_limit_ms"] / 1000) + 2
         )
 
-        if result["status"] != "ok":
-            return {"id": problem["id"], "status": result["status"]}
+        if proc.returncode != 0:
+            return {"status": "docker_error", "error": proc.stderr}
 
-        if result["result"] != test["output"]:
-            return {"id": problem["id"], "status": "wrong_answer"}
+        return json.loads(proc.stdout)
 
-    return {"id": problem["id"], "status": "accepted"}
+    except subprocess.TimeoutExpired:
+        return {"status": "TLE", "error": "Timeout"}
 
-def main():
-    problems = json.load(open("leetcode_eval_set.json"))
-    results = [run_problem(p) for p in problems]
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
 
-    json.dump(results, open("results.json", "w"), indent=2)
-    print("Evaluation finished")
+
+def test_solution(problem_data, student_code):
+
+    print(f"\n--- Testing Problem: {problem_data['name']} ---")
+
+    all_passed = True
+
+    for i, test in enumerate(problem_data["tests"]):
+
+        response = run_in_docker(
+            student_code,
+            test["input"],
+            problem_data
+        )
+
+        actual = str(response.get("result", "")).strip()
+        expected = str(test["output"]).strip()
+
+        if response.get("status") == "ok" and actual == expected:
+
+            print(f"Test {i}: PASSED ({response['runtime_ms']:.2f} ms)")
+
+        else:
+            all_passed = False
+
+            print(f"Test {i}: FAILED")
+            print(f"   Status:   {response.get('status')}")
+            print(f"   Error:    {response.get('error')}")
+            print(f"   Expected: {expected}")
+            print(f"   Got:      {actual}")
+
+    return all_passed
+
 
 if __name__ == "__main__":
-    main()
+
+    # Load problems
+    with open("codecontests_bell_200.json", "r") as f:
+        problems = json.load(f)
+
+    # Load generated model code
+    with open("generated_code.txt", "r") as f:
+        code_to_test = f.read()
+
+    # Test first problem
+    success = test_solution(problems[0], code_to_test)
+
+    print("\nOverall Result:", "SUCCESS" if success else "FAILURE")
